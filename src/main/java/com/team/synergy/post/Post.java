@@ -1,10 +1,15 @@
 package com.team.synergy.post;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Table
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Getter
 public class Post {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
