@@ -21,7 +21,7 @@ public class LoginController {
 
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody MemberJoinRequest dto) {
-        loginService.join(dto.getEmail(), dto.getPassword());
+        loginService.join(dto.getEmail(), dto.getPassword(), dto.getName());
         return ResponseEntity.ok().body("회원가입 성공");
     }
 

@@ -8,8 +8,12 @@ import com.team.synergy.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
+@Service
 public class LoginService {
     @Value("${jwt.token.secret}")
     private String key;
@@ -19,7 +23,7 @@ public class LoginService {
 
     private Long expiredTimeMs = 1000 * 60 * 60L;
 
-    public String join(String email, String password) {
+    public String join(String email, String password, String name) {
         // username 중복체크
         memberRepository.findByEmail(email)
                 .ifPresent(member -> {
@@ -29,6 +33,8 @@ public class LoginService {
         Member member = Member.builder()
                 .email(email)
                 .password(encoder.encode(password))
+                .name(name)
+                .createDate(LocalDateTime.now())
                 .build();
 
         memberRepository.save(member);
