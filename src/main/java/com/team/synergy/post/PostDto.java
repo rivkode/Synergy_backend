@@ -12,7 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class PostDto {
-    private String subject;
+    private Long id;
+    private String title;
     private String content;
 
 
@@ -20,7 +21,8 @@ public class PostDto {
         List<PostDto> allPostDto = new ArrayList<>();
         for(Post post : allPost) {
             PostDto postDto = PostDto.builder()
-                    .subject(post.getSubject())
+                    .id(post.getId())
+                    .title(post.getTitle())
                     .content(post.getContent())
                     .build();
             allPostDto.add(postDto);

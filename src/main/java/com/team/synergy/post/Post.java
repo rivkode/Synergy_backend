@@ -16,13 +16,13 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    private String subject;
+    private String title;
 
     private String content;
+
+    private Integer likes;
 
     private LocalDateTime createDate;
 
     private LocalDateTime modifiedDate;
-
-
 }

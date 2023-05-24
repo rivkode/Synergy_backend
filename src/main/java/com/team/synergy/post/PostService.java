@@ -12,33 +12,33 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostService {
-    private final PostReository postReository;
+    private final PostRepository postRepository;
 
-    public void postCreate(String subject, String content) {
+    public void postCreate(String title, String content) {
         Post post = Post.builder()
-                .subject(subject)
+                .title(title)
                 .content(content)
                 .createDate(LocalDateTime.now())
                 .build()
                 ;
 
-        postReository.save(post);
+        postRepository.save(post);
     }
 
     public List<PostDto> findAll() {
-        return PostDto.from(postReository.findAll());
+        return PostDto.from(postRepository.findAll());
     }
 
     public Post getPost(Long id) {
-        Optional<Post> post = this.postReository.findById(id);
+        Optional<Post> post = this.postRepository.findById(id);
         if (post.isPresent()) {
             return post.get();
         } else {
-            throw new AppException(ErrorCode.INVALID_DATA, "데이터가 없습니다");
+            throw new AppException(ErrorCode.INVALID_DATA, "게시글이 없습니다");
         }
     }
 
     public void postDelete(Post post) {
-        this.postReository.delete(post);
+        this.postRepository.delete(post);
     }
 }
