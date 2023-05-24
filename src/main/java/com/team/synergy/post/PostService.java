@@ -2,6 +2,7 @@ package com.team.synergy.post;
 
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
+import com.team.synergy.project.Project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,8 @@ public class PostService {
         }
     }
 
-    public void postDelete(Post post) {
+    public void postDelete(Long postId) {
+        Post post = postRepository.findById(postId).get();
         this.postRepository.delete(post);
     }
 }

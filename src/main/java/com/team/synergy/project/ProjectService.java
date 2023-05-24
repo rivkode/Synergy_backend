@@ -38,7 +38,8 @@ public class ProjectService {
     }
 
     @Transactional
-    public void projectDelete(Project project) {
+    public void projectDelete(Long projectId) {
+        Project project = projectRepository.findById(projectId).get();
         this.projectRepository.delete(project);
     }
 }

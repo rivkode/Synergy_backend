@@ -17,16 +17,20 @@ public class PostController {
         return ResponseEntity.ok().body(postService.postCreate(postDto));
     }
 
-    @GetMapping("/postAll")
+    @GetMapping("/detail/{id}")
+    public Result getPost(@PathVariable("id") Long postId) {
+        return new Result(postService.getPost(postId));
+    }
+
+
+    @GetMapping("/list")
     public Result getPostList() {
         return new Result(postService.findAll());
     }
 
     @GetMapping("/delete/{id}")
-    public ResponseEntity<String> postDelete(@PathVariable("id") Long id) {
-        Post post = this.postService.getPost(id);
-
-        this.postService.postDelete(post);
+    public ResponseEntity<String> postDelete(@PathVariable("id") Long postId) {
+        this.postService.postDelete(postId);
         return ResponseEntity.ok().body("게시글 삭제 성공");
     }
 }

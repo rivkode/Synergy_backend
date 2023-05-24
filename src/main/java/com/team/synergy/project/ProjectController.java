@@ -17,16 +17,14 @@ public class ProjectController {
         return ResponseEntity.ok().body("프로젝트 생성 성공");
     }
 
-    @GetMapping("/search/{id}")
+    @GetMapping("/detail/{id}")
     public Result getProject(@PathVariable("id") Long id) {
         return new Result(projectService.findById(id));
     }
 
     @GetMapping("/delete/{id}")
-    public ResponseEntity<String> projectDelete(@PathVariable("id") Long id) {
-        Project project = this.projectService.findById(id);
-
-        this.projectService.projectDelete(project);
+    public ResponseEntity<String> projectDelete(@PathVariable("id") Long projectId) {
+        this.projectService.projectDelete(projectId);
         return ResponseEntity.ok().body("프로젝트 삭제 성공");
     }
 }
