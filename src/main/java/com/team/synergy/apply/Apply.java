@@ -64,17 +64,12 @@ public class Apply {
     }
 
     //==비즈니스 로직==//
-    public void cancel() {
+    public void cancelApply() {
         if (getStatus() == ApplyStatus.DONE) {
-            throw new IllegalStateException("이미 신청이 완료되었습니다");
+            throw new IllegalStateException("이미 팀 구성이 완료되었습니다");
+        } else {
+            this.setStatus(ApplyStatus.CANCEL); // Apply 상태를 CANCEL 로 변경
         }
-
-        this.setStatus(ApplyStatus.CANCEL);
     }
-
-//    public void cancelApply(Member member, Project project, Apply apply) {
-//        apply.getProject().set
-//
-//    }
 
 }

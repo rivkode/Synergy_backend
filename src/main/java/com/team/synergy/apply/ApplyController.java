@@ -19,15 +19,17 @@ import java.util.Optional;
 public class ApplyController {
     private final ApplyService applyService;
 
-    private final ApplyRepository applyRepository;
-    private final MemberRepository memberRepository;
-
-    @PostMapping("/testApply")
+    @PostMapping("/createApply")
     public ResponseEntity<String> apply(@RequestParam("memberId") Long memberId,
                                         @RequestParam("projectId") Long projectId) {
-        Long apply = applyService.apply(memberId, projectId);
-        Apply getApply = applyRepository.findById(apply).get();
+        applyService.apply(memberId, projectId);
         return ResponseEntity.ok().body("신청 성공");
+    }
+
+    @PostMapping("/cancelApply")
+    public ResponseEntity<String> cancelApply(@RequestParam("applyId") Long applyId) {
+        applyService.cancelApply(applyId);
+        return ResponseEntity.ok().body("신청 취소 성공");
     }
 
     @GetMapping("/search/{id}")

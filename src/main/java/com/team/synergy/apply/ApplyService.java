@@ -35,9 +35,10 @@ public class ApplyService {
         return apply.getId();
     }
 
-//    public Long cancel(Long applyId) {
-//
-//    }
+    public void cancelApply(Long applyId) {
+        Apply apply = applyRepository.findById(applyId).get();
+        apply.cancelApply();
+    }
 
     public Apply findById(Long id) {
         Optional<Apply> apply = applyRepository.findById(id);
