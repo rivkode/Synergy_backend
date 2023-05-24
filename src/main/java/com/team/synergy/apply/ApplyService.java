@@ -35,6 +35,7 @@ public class ApplyService {
         return apply.getId();
     }
 
+    @Transactional
     public void cancelApply(Long applyId) {
         Apply apply = applyRepository.findById(applyId).get();
         apply.cancelApply();
