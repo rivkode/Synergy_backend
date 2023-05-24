@@ -4,6 +4,7 @@ import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,15 +15,11 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
 
-    public void postCreate(String title, String content) {
-        Post post = Post.builder()
-                .title(title)
-                .content(content)
-                .createDate(LocalDateTime.now())
-                .build()
-                ;
-
+    @Transactional
+    public String postCreate(PostDto postDto) {
+        Post post = Post.postCreate(postDto.getTitle(), postDto.getContent());
         postRepository.save(post);
+        return "게시글 작성 성공";
     }
 
     public List<PostDto> findAll() {

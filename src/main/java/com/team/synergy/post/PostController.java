@@ -14,8 +14,7 @@ public class PostController {
 
     @PostMapping("/create")
     public ResponseEntity<String> postCreate(@RequestBody PostDto postDto) {
-        this.postService.postCreate(postDto.getTitle(), postDto.getContent());
-        return ResponseEntity.ok().body("게시글 작성 성공");
+        return ResponseEntity.ok().body(postService.postCreate(postDto));
     }
 
     @GetMapping("/postAll")
