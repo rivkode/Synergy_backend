@@ -7,12 +7,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@DynamicUpdate //변경한 필드만 대응
 @Entity
 @Getter @Setter
 public class Apply {
@@ -30,7 +32,7 @@ public class Apply {
 
     @Column(name = "apply_status")
     @Enumerated(EnumType.STRING)
-    private ApplyStatus status; // 신청 상태 [APPLY, PROCESS, DONE]
+    private ApplyStatus status; // 신청 상태 [APPLY, CANCEL, PROCESS, DONE]
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
@@ -68,6 +70,7 @@ public class Apply {
         if (getStatus() == ApplyStatus.DONE) {
             throw new IllegalStateException("이미 팀 구성이 완료되었습니다");
         } else {
+            System.out.println("CANCEL");
             this.setStatus(ApplyStatus.CANCEL); // Apply 상태를 CANCEL 로 변경
         }
     }
