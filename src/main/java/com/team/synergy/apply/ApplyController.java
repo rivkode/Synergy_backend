@@ -1,11 +1,16 @@
 package com.team.synergy.apply;
 
 import com.team.synergy.generic.Result;
+import com.team.synergy.member.Member;
+import com.team.synergy.member.MemberDto;
+import com.team.synergy.member.MemberRepository;
+import com.team.synergy.project.ProjectDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -15,6 +20,7 @@ public class ApplyController {
     private final ApplyService applyService;
 
     private final ApplyRepository applyRepository;
+    private final MemberRepository memberRepository;
 
     @PostMapping("/testApply")
     public ResponseEntity<String> apply(@RequestParam("memberId") Long memberId,
@@ -26,9 +32,11 @@ public class ApplyController {
 
     @GetMapping("/search/{id}")
     public Result getApply(@PathVariable("id") Long id) {
-        Apply getApply = applyService.findById(id);
-        LocalDateTime current = LocalDateTime.now();
-        ApplyDto applyDto = new ApplyDto(current, getApply.getMember(), getApply.getProject());
-        return new Result(applyDto);
+        return new Result(applyService.getApplyDto(id));
+    }
+
+    @GetMapping("/search/memberId/{id}")
+    public Result getProject(@PathVariable("id") Long memberId) {
+        return new Result(applyService.getApplyByMemberId(memberId));
     }
 }
