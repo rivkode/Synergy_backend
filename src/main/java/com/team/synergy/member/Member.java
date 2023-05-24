@@ -1,6 +1,7 @@
 package com.team.synergy.member;
 
 import com.team.synergy.apply.Apply;
+import com.team.synergy.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,6 +35,6 @@ public class Member {
 
     private LocalDateTime createDate;
 
-    @OneToMany(mappedBy = "member")
-    private List<Apply> applyList = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    private List<Apply> applyList = new ArrayList<>();
 }

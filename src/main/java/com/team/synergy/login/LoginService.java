@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +24,7 @@ public class LoginService {
 
     private Long expiredTimeMs = 1000 * 60 * 60L;
 
+    @Transactional
     public String join(String email, String password, String name) {
         // username 중복체크
         memberRepository.findByEmail(email)
