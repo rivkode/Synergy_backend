@@ -4,10 +4,9 @@ import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -16,7 +15,8 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
 
 
-    public void projectCreate(String name, String content, String field, LocalDate createDate, LocalDate endDate) {
+    @Transactional
+    public void projectCreate(String name, String content, String field, LocalDateTime createDate, LocalDateTime endDate) {
         Project project = Project.builder()
                 .name(name)
                 .content(content)
@@ -37,6 +37,7 @@ public class ProjectService {
         }
     }
 
+    @Transactional
     public void projectDelete(Project project) {
         this.projectRepository.delete(project);
     }

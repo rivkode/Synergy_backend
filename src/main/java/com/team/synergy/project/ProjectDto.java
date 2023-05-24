@@ -1,6 +1,8 @@
 package com.team.synergy.project;
 
 import com.team.synergy.member.Member;
+import com.team.synergy.member.MemberDto;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -9,17 +11,35 @@ import java.util.List;
 
 @Getter
 public class ProjectDto {
+    private Long id;
     private String name;
 
     private String content;
 
     private String field;
 
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
-    private List<Member> teamMembers;
+    @Builder
+    public ProjectDto(Long id, String name, String content, String field, LocalDateTime createDate, LocalDateTime endDate) {
+        this.id = id;
+        this.name = name;
+        this.content = content;
+        this.field = field;
+        this.createDate = createDate;
+        this.endDate = endDate;
+    }
+    public static ProjectDto from(Project project) {
+        return ProjectDto.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .content(project.getContent())
+                .field(project.getField())
+                .createDate(project.getCreateDate())
+                .endDate(project.getEndDate())
+                .build();
+    }
 
-    private List<Member> appliers;
 }

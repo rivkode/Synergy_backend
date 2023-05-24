@@ -31,10 +31,10 @@ public class Project {
     private String field;
 
     @Column(name = "createDate")
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     @Column(name = "endDate")
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
     private ProjectStatus projectStatus; // PROCESS, DONE
