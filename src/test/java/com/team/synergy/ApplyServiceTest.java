@@ -51,7 +51,6 @@ public class ApplyServiceTest {
                 .email("rivs@kakao.com")
                 .password("1234")
                 .createDate(currentDate)
-                .applyList(applyList)
                 .build();
 
         memberRepository.save(member);
@@ -69,8 +68,6 @@ public class ApplyServiceTest {
 
 
 
-        Apply apply = Apply.createApply(member, project);
-
         //when
         Long applyId = applyService.apply(member.getId(), project.getId());
 
@@ -82,7 +79,46 @@ public class ApplyServiceTest {
         System.out.println("status = " + status);
         System.out.println("applyStatus = " + applyStatus);
         Assert.assertEquals("신청시 상태는 APPLY", ApplyStatus.APPLY, getApply.getStatus());
-        Assert.assertEquals("멤버의 프로젝트와 프로젝트의 멤버는 신청한 객체내용과 같다", "이종훈", apply.getMember().getName());
-        Assert.assertEquals("멤버의 프로젝트와 프로젝트의 멤버는 신청한 객체내용과 같다", "프로젝트 이름", apply.getProject().getName());
+        Assert.assertEquals("멤버의 프로젝트와 프로젝트의 멤버는 신청한 객체내용과 같다", "이종훈", getApply.getMember().getName());
+        Assert.assertEquals("멤버의 프로젝트와 프로젝트의 멤버는 신청한 객체내용과 같다", "프로젝트 이름", getApply.getProject().getName());
+    }
+
+    @Test
+    public void 프로젝트취소() throws Exception{
+        //given
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        Member member = Member.builder()
+                .name("이종훈")
+                .email("rivs@kakao.com")
+                .password("1234")
+                .createDate(currentDate)
+                .build();
+
+        memberRepository.save(member);
+
+
+        Project project = Project.builder()
+                .name("프로젝트 이름")
+                .content("프로젝트 내용")
+                .field("프로젝트 분야")
+                .createDate(currentDate)
+                .endDate(currentDate)
+                .build();
+
+        projectRepository.save(project);
+
+        //when
+        Long applyId = applyService.apply(member.getId(), project.getId());
+        applyService.cancelApply(applyId);
+
+        //then
+        Apply getApply = applyRepository.findById(applyId).get();
+
+        ApplyStatus status = ApplyStatus.CANCEL;
+        ApplyStatus applyStatus = getApply.getStatus();
+        System.out.println("status = " + status);
+        System.out.println("applyStatus = " + applyStatus);
+        Assert.assertEquals("취소시 상태는 CANCEL", status, applyStatus);
     }
 }
