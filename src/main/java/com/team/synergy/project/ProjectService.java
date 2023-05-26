@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -41,5 +42,13 @@ public class ProjectService {
     public void projectDelete(Long projectId) {
         Project project = projectRepository.findById(projectId).get();
         this.projectRepository.delete(project);
+    }
+
+    public List<ProjectDto> findByKeyword(String keyword) {
+        System.out.println("keyword = " + keyword);
+        List<Project> search = projectRepository.search(keyword);
+        System.out.println("search size = " + search.size());
+
+        return ProjectDto.fromList(search);
     }
 }
