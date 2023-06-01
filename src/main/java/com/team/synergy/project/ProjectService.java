@@ -38,6 +38,10 @@ public class ProjectService {
         }
     }
 
+    public List<ProjectDto> findAll() {
+        return ProjectDto.fromList(projectRepository.findAll());
+    }
+
     @Transactional
     public void projectDelete(Long projectId) {
         Project project = projectRepository.findById(projectId).get();

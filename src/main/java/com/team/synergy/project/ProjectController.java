@@ -31,6 +31,11 @@ public class ProjectController {
         return ResponseEntity.ok().body("프로젝트 삭제 성공");
     }
 
+    @GetMapping("/list")
+    public Result getProjectList() {
+        return new Result(projectService.findAll());
+    }
+
     @GetMapping("/findByKeyword")
     public List<ProjectDto> findByKeyword(@RequestBody KeywordDto keywordDto) {
         String keyword = keywordDto.getKeyword();
