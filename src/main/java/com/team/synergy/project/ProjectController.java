@@ -1,9 +1,12 @@
 package com.team.synergy.project;
 
 import com.team.synergy.generic.Result;
+import com.team.synergy.keyword.KeywordDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/project")
@@ -26,5 +29,17 @@ public class ProjectController {
     public ResponseEntity<String> projectDelete(@PathVariable("id") Long projectId) {
         this.projectService.projectDelete(projectId);
         return ResponseEntity.ok().body("프로젝트 삭제 성공");
+    }
+
+    @GetMapping("/list")
+    public Result getProjectList() {
+        return new Result(projectService.findAll());
+    }
+
+    @GetMapping("/findByKeyword")
+    public List<ProjectDto> findByKeyword(@RequestBody KeywordDto keywordDto) {
+        String keyword = keywordDto.getKeyword();
+        System.out.println("keyword = " + keyword);
+        return projectService.findByKeyword(keyword);
     }
 }

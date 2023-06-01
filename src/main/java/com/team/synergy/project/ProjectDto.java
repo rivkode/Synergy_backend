@@ -7,6 +7,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -40,6 +41,14 @@ public class ProjectDto {
                 .createDate(project.getCreateDate())
                 .endDate(project.getEndDate())
                 .build();
+    }
+
+    public static List<ProjectDto> fromList(List<Project> projectList) {
+        List<ProjectDto> projectDtoList = new ArrayList<>();
+        for(Project project : projectList) {
+            projectDtoList.add(ProjectDto.from(project));
+        }
+        return projectDtoList;
     }
 
 }

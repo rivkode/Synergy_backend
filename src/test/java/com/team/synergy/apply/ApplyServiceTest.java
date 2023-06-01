@@ -1,4 +1,4 @@
-package com.team.synergy;
+package com.team.synergy.apply;
 
 import com.team.synergy.apply.Apply;
 import com.team.synergy.apply.ApplyRepository;
@@ -10,6 +10,7 @@ import com.team.synergy.project.Project;
 import com.team.synergy.project.ProjectRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,9 @@ public class ApplyServiceTest {
     @Autowired
     ApplyRepository applyRepository;
 
+    @DisplayName("프로젝트 신청")
     @Test
-    public void 프로젝트신청() throws Exception {
+    void applyProject() throws Exception {
         //given
         LocalDateTime currentDate = LocalDateTime.now();
         List<Apply> applyList = new ArrayList<>();
@@ -79,12 +81,13 @@ public class ApplyServiceTest {
         System.out.println("status = " + status);
         System.out.println("applyStatus = " + applyStatus);
         Assert.assertEquals("신청시 상태는 APPLY", ApplyStatus.APPLY, getApply.getStatus());
-        Assert.assertEquals("멤버의 프로젝트와 프로젝트의 멤버는 신청한 객체내용과 같다", "이종훈", getApply.getMember().getName());
-        Assert.assertEquals("멤버의 프로젝트와 프로젝트의 멤버는 신청한 객체내용과 같다", "프로젝트 이름", getApply.getProject().getName());
+        Assert.assertEquals("신청한 멤버의 이름 : 이종훈", "이종훈", getApply.getMember().getName());
+        Assert.assertEquals("신청한 프로젝트의 이름 : 프로젝트 이름", "프로젝트 이름", getApply.getProject().getName());
     }
 
+    @DisplayName("프로젝트 취소")
     @Test
-    public void 프로젝트취소() throws Exception{
+    void cancelProject() throws Exception{
         //given
         LocalDateTime currentDate = LocalDateTime.now();
 
