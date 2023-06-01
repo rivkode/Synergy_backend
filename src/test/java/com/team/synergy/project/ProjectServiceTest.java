@@ -33,7 +33,7 @@ public class ProjectServiceTest {
         LocalDateTime currentDate = LocalDateTime.now();
         List<Integer> integerList = new ArrayList<>();
 
-        for (int i=0; i<10; i++) {
+        for (int i=0; i<100; i++) {
             integerList.add(i);
             /**
              * 여기서 객체 만들 필요 없음, projectCreate내에서 객체 생성함, 값만 넘겨주자
@@ -49,7 +49,7 @@ public class ProjectServiceTest {
         //when
 
         //then
-        Assert.assertEquals("프로젝트 100건 생성", 10, integerList.size());
+        Assert.assertEquals("프로젝트 100건 생성", 100, integerList.size());
     }
 
     @DisplayName("10만건 프로젝트 데이터 생성")
