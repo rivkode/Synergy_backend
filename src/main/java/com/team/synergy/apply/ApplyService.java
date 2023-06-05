@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -26,8 +27,13 @@ public class ApplyService {
 
     @Transactional
     public Long apply(Long memberId, Long projectId) {
-        Member member = memberRepository.findById(memberId).get();
-        Project project = projectRepository.findById(projectId).get();
+        Optional<Member> memberValue = memberRepository.findById(memberId);
+        Member member = memberValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "멤버가 없습니다."));
+
+
+        Optional<Project> projectValue = projectRepository.findById(projectId);
+        Project project = projectValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "프로젝트가 없습니다."));
+
 
         Apply apply = Apply.createApply(member, project);
 
@@ -37,7 +43,9 @@ public class ApplyService {
 
     @Transactional
     public void cancelApply(Long applyId) {
-        Apply apply = applyRepository.findById(applyId).get();
+        Optional<Apply> applyValue = applyRepository.findById(applyId);
+        Apply apply = applyValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "해당 신청은 없습니다."));
+
         apply.cancelApply();
     }
 
@@ -61,7 +69,9 @@ public class ApplyService {
     }
 
     public List<ApplyDto> getApplyByMemberId(Long memberId) {
-        Member member = memberRepository.findById(memberId).get();
+        Optional<Member> memberValue = memberRepository.findById(memberId);
+        Member member = memberValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "멤버가 없습니다."));
+
         List<Apply> applyList = applyRepository.findAppliesByMember(member);
         return ApplyDto.of(applyList);
     }
