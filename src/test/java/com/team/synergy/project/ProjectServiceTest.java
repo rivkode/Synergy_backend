@@ -17,7 +17,7 @@ import java.util.Locale;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@Transactional
+@Transactional
 public class ProjectServiceTest {
     @Autowired
     ProjectRepository projectRepository;
@@ -88,30 +88,26 @@ public class ProjectServiceTest {
 
         //then
         Assert.assertEquals("10만건 테스트 데이터 생성", 100000, projectList.size());
-
-
-
-
     }
 
-    @DisplayName("프로젝트 검색")
-    @Test
-    void findProject() {
-        //given
-
-        //when
-
-        //then
-    }
-
-    @DisplayName("프로젝트 삭제")
-    @Test
-    void deleteProject() {
-        //given
-
-        //when
-
-        //then
-    }
+//    @DisplayName("프로젝트 검색")
+//    @Test
+//    void findProject() {
+//        //given
+//
+//        //when
+//
+//        //then
+//    }
+//
+//    @DisplayName("프로젝트 삭제")
+//    @Test
+//    void deleteProject() {
+//        //given
+//
+//        //when
+//
+//        //then
+//    }
 
 }
