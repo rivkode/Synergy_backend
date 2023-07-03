@@ -46,7 +46,7 @@ public class ApplyService {
         Optional<Apply> applyValue = applyRepository.findById(applyId);
         Apply apply = applyValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "해당 신청은 없습니다."));
 
-        apply.cancelApply();
+        apply.cancel();
     }
 
     public Apply findById(Long id) {
