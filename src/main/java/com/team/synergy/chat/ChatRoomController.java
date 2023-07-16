@@ -11,7 +11,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/chat")
 public class ChatRoomController {
-    private final ChatRepository chatRepository;
+    private final ChatService chatService;
 
     @GetMapping("/room")
     public String rooms(Model model) {
@@ -21,13 +21,13 @@ public class ChatRoomController {
     @GetMapping("/rooms")
     @ResponseBody
     public List<ChatRoom> room() {
-        return chatRepository.findAllRoom();
+        return chatService.findAllRoom();
     }
 
     @PostMapping("/room")
     @ResponseBody
     public ChatRoom createRoom(@RequestParam String name) {
-        return chatRepository.createChatRoom(name);
+        return chatService.createChatRoom(name);
     }
 
     @GetMapping("/room/enter/{roomId}")
@@ -39,6 +39,6 @@ public class ChatRoomController {
     @GetMapping("/room/{roomId}")
     @ResponseBody
     public ChatRoom roomInfo(@PathVariable String roomId) {
-        return chatRepository.findRoomById(roomId);
+        return chatService.findRoomById(roomId);
     }
 }
