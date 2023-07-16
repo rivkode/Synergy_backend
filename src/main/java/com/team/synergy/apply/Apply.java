@@ -66,7 +66,7 @@ public class Apply {
     }
 
     //==비즈니스 로직==//
-    public void cancelApply() {
+    public void cancel() {
         if (getStatus() == ApplyStatus.DONE) {
             throw new IllegalStateException("이미 팀 구성이 완료되었습니다");
         } else {
