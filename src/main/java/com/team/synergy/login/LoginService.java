@@ -2,7 +2,7 @@ package com.team.synergy.login;
 
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
-import com.team.synergy.login.utils.JwtTokenUtil;
+import com.team.synergy.utils.JwtTokenUtil;
 import com.team.synergy.member.Member;
 import com.team.synergy.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
@@ -32,14 +30,13 @@ public class LoginService {
                     throw new AppException(ErrorCode.MEMBERNAME_DUPLICATED, email + "는 이미 있습니다.");
                 });
 
-        Member member = Member.builder()
-                .email(email)
-                .password(encoder.encode(password))
-                .name(name)
-                .createDate(LocalDateTime.now())
-                .build();
+//        Member member = Member.builder()
+//                .email(email)
+//                .password(encoder.encode(password))
+//                .name(name)
+//                .build();
 
-        memberRepository.save(member);
+//        memberRepository.save(member);
 
         return "SUCCESS";
     }

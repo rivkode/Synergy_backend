@@ -1,4 +1,4 @@
-package com.team.synergy.login.configuration;
+package com.team.synergy.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

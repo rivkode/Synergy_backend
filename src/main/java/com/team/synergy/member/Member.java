@@ -1,28 +1,18 @@
 package com.team.synergy.member;
 
-import com.team.synergy.apply.Apply;
-import com.team.synergy.post.Post;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.team.synergy.BaseTime;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Getter
-public class Member {
+public class Member extends BaseTime {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private Long id;
+    private String id;
 
     @Column(name = "member_name")
     private String name;
@@ -33,8 +23,28 @@ public class Member {
     @Column(name = "member_email")
     private String email;
 
-    private LocalDateTime createDate;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-//    @OneToMany(mappedBy = "member")
-//    private List<Apply> applyList = new ArrayList<>();
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Member(String name, String password, String email) {
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.password = password;
+        this.email = email;
+    }
+
+    protected Member() {
+
+    }
+
+
 }

@@ -1,11 +1,9 @@
-package com.team.synergy.project;
+package com.team.synergy.project.dto;
 
-import com.team.synergy.member.Member;
-import com.team.synergy.member.MemberDto;
+import com.team.synergy.project.Project;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
