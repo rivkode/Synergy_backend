@@ -1,6 +1,6 @@
 package com.team.synergy.apply;
 
-import com.team.synergy.exception.AppException;
+import com.team.synergy.BaseTime;
 import com.team.synergy.member.Member;
 import com.team.synergy.project.Project;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @DynamicUpdate //변경한 필드만 대응
 @Entity
 @Getter @Setter
-public class Apply {
+public class Apply extends BaseTime {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apply_id")

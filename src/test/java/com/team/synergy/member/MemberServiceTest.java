@@ -2,6 +2,7 @@ package com.team.synergy.member;
 
 import com.github.javafaker.Faker;
 import com.team.synergy.login.LoginService;
+import com.team.synergy.member.dto.MemberSignUpRequest;
 import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import java.util.Locale;
 public class MemberServiceTest {
 
     @Autowired
-    LoginService loginService;
+    MemberService memberService;
 
     @Autowired
     MemberRepository memberRepository;
@@ -32,20 +33,23 @@ public class MemberServiceTest {
     void makeMember() {
         //given
         Faker faker = new Faker(Locale.US);
-        List<Integer> integerList = new ArrayList<>();
+        List<Member> memberList = new ArrayList<>();
 
+        int before = memberRepository.countMembers();
         for (int i=0; i<100; i++) {
-            integerList.add(i);
             String name = faker.name().fullName();
             String password = faker.crypto().sha256();
             String email = faker.internet().emailAddress();
-            loginService.join(email, password, name);
+            MemberSignUpRequest request = new MemberSignUpRequest(name, password, email);
+
+            //when
+            memberService.signUp(request);
         }
 
-        //when
+        int after = memberRepository.countMembers();
 
         //then
-        Assert.assertEquals("멤버 100명 생성", 100, integerList.size());
+        Assert.assertEquals("멤버 100명 생성", 100, after - before);
     }
 
     @DisplayName("10만명 멤버 데이터 생성")
@@ -56,13 +60,13 @@ public class MemberServiceTest {
         Faker faker = new Faker(Locale.US);
 
         for(int i=0; i<100000; i++) {
-            Member member = Member.builder()
-                    .email(faker.internet().emailAddress())
-                    .password(faker.crypto().sha256())
-                    .name(faker.name().fullName())
-                    .createDate(LocalDateTime.now())
-                    .build();
-            memberList.add(member);
+//            Member member = Member.builder()
+//                    .email(faker.internet().emailAddress())
+//                    .password(faker.crypto().sha256())
+//                    .name(faker.name().fullName())
+//                    .createDate(LocalDateTime.now())
+//                    .build();
+//            memberList.add(member);
         }
         System.out.println("memberList size = " + memberList.size());
 

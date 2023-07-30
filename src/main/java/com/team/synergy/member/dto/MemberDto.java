@@ -1,13 +1,11 @@
-package com.team.synergy.member;
+package com.team.synergy.member.dto;
 
-import com.team.synergy.apply.Apply;
+import com.team.synergy.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter @Setter
 public class MemberDto {
@@ -28,7 +26,6 @@ public class MemberDto {
                 .name(member.getName())
                 .email(member.getEmail())
                 .password(member.getPassword())
-                .createDate(member.getCreateDate())
                 .build();
     }
 

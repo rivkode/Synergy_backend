@@ -1,7 +1,8 @@
 package com.team.synergy.project;
 
 import com.team.synergy.generic.Result;
-import com.team.synergy.keyword.KeywordDto;
+import com.team.synergy.project.dto.KeywordDto;
+import com.team.synergy.project.dto.ProjectDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

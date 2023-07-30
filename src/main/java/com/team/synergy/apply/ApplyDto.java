@@ -1,11 +1,8 @@
 package com.team.synergy.apply;
 
-import com.team.synergy.member.Member;
-import com.team.synergy.member.MemberDto;
-import com.team.synergy.project.Project;
-import com.team.synergy.project.ProjectDto;
+import com.team.synergy.member.dto.MemberDto;
+import com.team.synergy.project.dto.ProjectDto;
 import lombok.*;
-import net.bytebuddy.asm.Advice;
 
 import java.time.LocalDateTime;
 import java.util.List;

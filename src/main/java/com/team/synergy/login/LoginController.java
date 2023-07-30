@@ -1,8 +1,8 @@
 package com.team.synergy.login;
 
-import com.team.synergy.login.LoginService;
-import com.team.synergy.member.MemberJoinRequest;
-import com.team.synergy.member.MemberLoginRequest;
+import com.team.synergy.member.MemberService;
+import com.team.synergy.member.dto.MemberSignInRequest;
+import com.team.synergy.member.dto.MemberSignUpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,17 +17,17 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/members")
 public class LoginController {
-    private final LoginService loginService;
+    private final MemberService memberService;
 
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody MemberJoinRequest dto) {
-        loginService.join(dto.getEmail(), dto.getPassword(), dto.getName());
+    public ResponseEntity<String> join(@RequestBody MemberSignUpRequest dto) {
+        memberService.signUp(dto);
         return ResponseEntity.ok().body("회원가입 성공");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody MemberLoginRequest dto, HttpServletResponse response) {
-        String token = loginService.login(dto.getEmail(), dto.getPassword());
+    public ResponseEntity<String> login(@RequestBody MemberSignInRequest dto, HttpServletResponse response) {
+        String token = memberService.signIn(dto);
 
         ResponseCookie cookie = ResponseCookie.from("ACESSTOKEN", token)
                 .maxAge(7 * 24 * 60 * 60) // 쿠키 만료 7일 설정

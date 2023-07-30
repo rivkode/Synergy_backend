@@ -1,4 +1,4 @@
-package com.team.synergy.keyword;
+package com.team.synergy.project.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

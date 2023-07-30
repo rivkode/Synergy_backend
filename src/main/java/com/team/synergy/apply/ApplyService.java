@@ -3,10 +3,10 @@ package com.team.synergy.apply;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
-import com.team.synergy.member.MemberDto;
+import com.team.synergy.member.dto.MemberDto;
 import com.team.synergy.member.MemberRepository;
 import com.team.synergy.project.Project;
-import com.team.synergy.project.ProjectDto;
+import com.team.synergy.project.dto.ProjectDto;
 import com.team.synergy.project.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RequiredArgsConstructor

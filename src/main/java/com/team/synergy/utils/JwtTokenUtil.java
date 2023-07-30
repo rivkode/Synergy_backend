@@ -1,4 +1,4 @@
-package com.team.synergy.login.utils;
+package com.team.synergy.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

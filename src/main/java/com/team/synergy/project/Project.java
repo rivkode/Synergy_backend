@@ -1,13 +1,10 @@
 package com.team.synergy.project;
 
 import com.team.synergy.apply.Apply;
-import com.team.synergy.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
