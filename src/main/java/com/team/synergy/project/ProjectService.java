@@ -3,7 +3,10 @@ package com.team.synergy.project;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.project.dto.ProjectDto;
+import com.team.synergy.project.dto.response.ProjectGetResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +33,7 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public Project findById(Long id) {
+    public Project findProjectById(Long id) {
         Optional<Project> project = this.projectRepository.findById(id);
         if (project.isPresent()) {
             return project.get();
@@ -55,5 +58,12 @@ public class ProjectService {
         System.out.println("search size = " + search.size());
 
         return ProjectDto.fromList(search);
+    }
+
+    public Page<ProjectGetResponse> getProjects(Pageable pageable) {
+        Page<Project> projects = projectRepository.findAll(pageable);
+        Page<ProjectGetResponse> projectGetResponses = ProjectGetResponse.toResponse(projects);
+
+        return projectGetResponses;
     }
 }

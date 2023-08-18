@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
 
+    Optional<Member> findById(String memberId);
+
     @Query(value = "SELECT count(*) FROM member", nativeQuery = true)
     Integer countMembers();
 

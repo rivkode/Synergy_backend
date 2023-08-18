@@ -46,4 +46,8 @@ public class MemberService {
 
     }
 
+    public Member findMemberById(String memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, memberId + " : id 인 멤버가 없습니다"));
+    }
 }
