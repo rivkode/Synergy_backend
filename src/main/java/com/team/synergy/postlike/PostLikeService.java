@@ -33,6 +33,6 @@ public class PostLikeService {
         PostLike postLike = postLikeRepository.findPostLikeByMemberAndPost(member, post)
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "유효하지 않은 PostLike입니다"));
         postLike.deletePostLike();
-        return DeletePostLikeResponse.from(); // 수정 필요
+        return DeletePostLikeResponse.from(postLike); // 수정 필요
     }
 }

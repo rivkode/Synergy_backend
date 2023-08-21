@@ -1,6 +1,7 @@
 package com.team.synergy.project.dto;
 
 import com.team.synergy.project.Project;
+import com.team.synergy.project.ProjectStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,15 +20,18 @@ public class ProjectDto {
 
     private LocalDateTime createDate;
 
+    private LocalDateTime startDate;
+
     private LocalDateTime endDate;
 
     @Builder
-    public ProjectDto(Long id, String name, String content, String field, LocalDateTime createDate, LocalDateTime endDate) {
+    public ProjectDto(Long id, String name, String content, String field, LocalDateTime createDate, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;
         this.name = name;
         this.content = content;
         this.field = field;
         this.createDate = createDate;
+        this.startDate = startDate;
         this.endDate = endDate;
     }
     public static ProjectDto from(Project project) {

@@ -23,9 +23,7 @@ public class PostLikeController {
 
     @PostMapping("/{postId}/likes")
     public ResponseEntity<CreatePostLikeResponse> createPostLike(@PathVariable Long postId, @RequestBody CreatePostLikeRequest request) {
-        // 무엇을 통해 member을 얻는지 명확하다
         Member member = memberService.findMemberById(request.getMemberId());
-        // getPost? getter 쓰는건가 무엇을 통해 얻는지 불명확하다
         Post post = postService.findPostById(postId);
 
         return ResponseEntity.status(HttpStatus.CREATED)

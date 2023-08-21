@@ -49,4 +49,11 @@ public class PostService {
         Page<PostGetResponse> postGetResponses = PostGetResponse.toResponses(posts);
         return postGetResponses;
     }
+
+    public Page<PostGetResponse> searchPosts(Pageable pageable, String keyword) {
+        Page<Post> posts = postRepository.findByTitleContaining(keyword, pageable);
+        Page<PostGetResponse> postGetResponses = PostGetResponse.toResponses(posts);
+
+        return postGetResponses;
+    }
 }

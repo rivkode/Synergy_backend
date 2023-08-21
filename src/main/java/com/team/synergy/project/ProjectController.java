@@ -1,6 +1,7 @@
 package com.team.synergy.project;
 
 import com.team.synergy.generic.Result;
+import com.team.synergy.post.dto.PostGetResponse;
 import com.team.synergy.project.dto.KeywordDto;
 import com.team.synergy.project.dto.ProjectDto;
 import com.team.synergy.project.dto.response.ProjectGetResponse;
@@ -22,7 +23,7 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<String> projectCreate(@RequestBody ProjectDto projectDto) {
-        this.projectService.projectCreate(projectDto.getName(), projectDto.getContent(), projectDto.getField(), projectDto.getCreateDate(), projectDto.getEndDate());
+        this.projectService.projectCreate(projectDto);
         return ResponseEntity.ok().body("프로젝트 생성 성공");
     }
 
@@ -45,10 +46,11 @@ public class ProjectController {
                 .body(projectGetResponses);
     }
 
-    @GetMapping("/findByKeyword")
-    public List<ProjectDto> findByKeyword(@RequestBody KeywordDto keywordDto) {
-        String keyword = keywordDto.getKeyword();
-        System.out.println("keyword = " + keyword);
-        return projectService.findByKeyword(keyword);
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProjectGetResponse>> searchProjectList(@PageableDefault(size = 5, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String keyword) {
+        Page<ProjectGetResponse> projectGetResponses = projectService.searchProjects(pageable, keyword);
+
+        return ResponseEntity.ok()
+                .body(projectGetResponses);
     }
 }

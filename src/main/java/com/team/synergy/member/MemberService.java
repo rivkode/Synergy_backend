@@ -2,11 +2,14 @@ package com.team.synergy.member;
 
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
-import com.team.synergy.utils.JwtTokenUtil;
+import com.team.synergy.member.dto.response.MemberGetResponse;
+import com.team.synergy.utils.JwtUtil;
 import com.team.synergy.member.dto.MemberSignInRequest;
 import com.team.synergy.member.dto.MemberSignUpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +22,12 @@ public class MemberService {
 
     private final BCryptPasswordEncoder encoder;
 
-    private Long expiredTimeMs = 1000 * 60 * 60L;
+    private Long expiredTimeMs = 1000 * 24 * 60 * 60L; // 1일
 
     @Value("${jwt.token.secret}")
-    private String key;
+    private String secretKey;
 
-    public String signUp(MemberSignUpRequest request) {
+    public String signup(MemberSignUpRequest request) {
         memberRepository.findByEmail(request.getEmail())
                 .ifPresent(member -> {
                     throw new AppException((ErrorCode.MEMBERNAME_DUPLICATED), request.getEmail() + "는 이미 존재합니다");
@@ -34,7 +37,7 @@ public class MemberService {
         return "SUCCESS";
     }
 
-    public String signIn(MemberSignInRequest request) {
+    public String login(MemberSignInRequest request) {
         Member savedMember = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, request.getEmail() + "은 존재하지 않습니다"));
 
@@ -42,12 +45,20 @@ public class MemberService {
             throw new AppException(ErrorCode.INVALID_PASSWORD, "패스워드를 잘못 입력하였습니다");
         }
 
-        return JwtTokenUtil.createToken(savedMember.getEmail(), key, expiredTimeMs);
+        return JwtUtil.createJwt(savedMember.getEmail(), secretKey, expiredTimeMs);
 
     }
 
     public Member findMemberById(String memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, memberId + " : id 인 멤버가 없습니다"));
+    }
+
+    public Page<MemberGetResponse> searchMember(Pageable pageable, String keyword) {
+        Page<Member> members = memberRepository.findByNameContaining(keyword, pageable);
+        Page<MemberGetResponse> memberGetResponses = MemberGetResponse.toResponse(members);
+
+        return memberGetResponses;
+
     }
 }

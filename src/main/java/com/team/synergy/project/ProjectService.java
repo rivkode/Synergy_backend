@@ -21,13 +21,15 @@ public class ProjectService {
 
 
     @Transactional
-    public void projectCreate(String name, String content, String field, LocalDateTime createDate, LocalDateTime endDate) {
+    public void projectCreate(ProjectDto projectDto) {
         Project project = Project.builder()
-                .name(name)
-                .content(content)
-                .field(field)
-                .createDate(createDate)
-                .endDate(endDate)
+                .name(projectDto.getName())
+                .content(projectDto.getContent())
+                .field(projectDto.getField())
+                .createDate(projectDto.getCreateDate())
+                .startDate(projectDto.getStartDate())
+                .endDate(projectDto.getEndDate())
+                .projectStatus(ProjectStatus.PROCESS)
                 .build();
 
         projectRepository.save(project);
@@ -65,5 +67,14 @@ public class ProjectService {
         Page<ProjectGetResponse> projectGetResponses = ProjectGetResponse.toResponse(projects);
 
         return projectGetResponses;
+    }
+
+    public Page<ProjectGetResponse> searchProjects(Pageable pageable, String keyword) {
+        Page<Project> projects = projectRepository.findByNameContaining(keyword, pageable);
+        Page<ProjectGetResponse> projectGetResponses = ProjectGetResponse.toResponse(projects);
+
+        return projectGetResponses;
+
+
     }
 }

@@ -42,4 +42,12 @@ public class PostController {
         this.postService.postDelete(postId);
         return ResponseEntity.ok().body("게시글 삭제 성공");
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<PostGetResponse>> searchPostList(@PageableDefault(size = 13, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String keyword) {
+        Page<PostGetResponse> postGetResponses = postService.searchPosts(pageable, keyword);
+
+        return ResponseEntity.ok()
+                .body(postGetResponses);
+    }
 }

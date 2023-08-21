@@ -25,7 +25,7 @@ public class ApplyService {
     private final ProjectRepository projectRepository;
 
     @Transactional
-    public Long apply(Long memberId, Long projectId) {
+    public Long apply(String memberId, Long projectId) {
         Optional<Member> memberValue = memberRepository.findById(memberId);
         Member member = memberValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "멤버가 없습니다."));
 
