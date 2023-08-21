@@ -1,5 +1,7 @@
-package com.team.synergy.like;
+package com.team.synergy.projectlike;
 
+import com.team.synergy.exception.AppException;
+import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
 import com.team.synergy.member.MemberRepository;
 import com.team.synergy.project.Project;
@@ -19,10 +21,7 @@ public class ProjectLikeService {
     private final ProjectRepository projectRepository;
 
     @Transactional
-    public Long like(Long memberId, Long projectId) {
-        Member member = memberRepository.findById(memberId).get();
-        Project project = projectRepository.findById(projectId).get();
-
+    public Long createProjectLike(Member member, Project project) {
         ProjectLike projectLike = ProjectLike.createProjectLike(member, project);
 
         projectLikeRepository.save(projectLike);
@@ -30,8 +29,9 @@ public class ProjectLikeService {
     }
 
     @Transactional
-    public void cancelProjectLike(Long projectLikeId) {
-        ProjectLike projectLike = projectLikeRepository.findById(projectLikeId).get();
+    public void deleteProjectLike(Member member, Project project) {
+        ProjectLike projectLike = projectLikeRepository.findByMemberAndProject(member, project)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "존재하지 않는 Project 입니다"));
         projectLike.cancelProjectLike();
 
     }

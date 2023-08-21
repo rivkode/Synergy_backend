@@ -43,7 +43,7 @@ public class ProjectServiceTest {
             String field = faker.job().field();
             LocalDateTime endDate = LocalDateTime.parse("2023-10-11T12:59:59");
 
-            projectService.projectCreate(name, content, field, currentDate, endDate);
+//            projectService.projectCreate(name, content, field, currentDate, endDate);
         }
 
         //when

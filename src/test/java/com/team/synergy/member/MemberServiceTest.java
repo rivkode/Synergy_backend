@@ -1,7 +1,7 @@
 package com.team.synergy.member;
 
 import com.github.javafaker.Faker;
-import com.team.synergy.login.LoginService;
+
 import com.team.synergy.member.dto.MemberSignUpRequest;
 import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
@@ -10,9 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -43,7 +41,7 @@ public class MemberServiceTest {
             MemberSignUpRequest request = new MemberSignUpRequest(name, password, email);
 
             //when
-            memberService.signUp(request);
+            memberService.signup(request);
         }
 
         int after = memberRepository.countMembers();

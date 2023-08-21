@@ -13,7 +13,7 @@ public class ApplyController {
     private final ApplyService applyService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> apply(@RequestParam("memberId") Long memberId,
+    public ResponseEntity<String> apply(@RequestParam("memberId") String memberId,
                                         @RequestParam("projectId") Long projectId) {
         applyService.apply(memberId, projectId);
         return ResponseEntity.ok().body("신청 성공");

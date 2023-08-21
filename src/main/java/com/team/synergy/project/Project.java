@@ -32,6 +32,9 @@ public class Project {
     @Column(name = "createDate")
     private LocalDateTime createDate;
 
+    @Column(name = "startDate")
+    private LocalDateTime startDate;
+
     @Column(name = "endDate")
     private LocalDateTime endDate;
 

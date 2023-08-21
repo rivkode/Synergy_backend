@@ -3,7 +3,10 @@ package com.team.synergy.project;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.project.dto.ProjectDto;
+import com.team.synergy.project.dto.response.ProjectGetResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,19 +21,21 @@ public class ProjectService {
 
 
     @Transactional
-    public void projectCreate(String name, String content, String field, LocalDateTime createDate, LocalDateTime endDate) {
+    public void projectCreate(ProjectDto projectDto) {
         Project project = Project.builder()
-                .name(name)
-                .content(content)
-                .field(field)
-                .createDate(createDate)
-                .endDate(endDate)
+                .name(projectDto.getName())
+                .content(projectDto.getContent())
+                .field(projectDto.getField())
+                .createDate(projectDto.getCreateDate())
+                .startDate(projectDto.getStartDate())
+                .endDate(projectDto.getEndDate())
+                .projectStatus(ProjectStatus.PROCESS)
                 .build();
 
         projectRepository.save(project);
     }
 
-    public Project findById(Long id) {
+    public Project findProjectById(Long id) {
         Optional<Project> project = this.projectRepository.findById(id);
         if (project.isPresent()) {
             return project.get();
@@ -55,5 +60,21 @@ public class ProjectService {
         System.out.println("search size = " + search.size());
 
         return ProjectDto.fromList(search);
+    }
+
+    public Page<ProjectGetResponse> getProjects(Pageable pageable) {
+        Page<Project> projects = projectRepository.findAll(pageable);
+        Page<ProjectGetResponse> projectGetResponses = ProjectGetResponse.toResponse(projects);
+
+        return projectGetResponses;
+    }
+
+    public Page<ProjectGetResponse> searchProjects(Pageable pageable, String keyword) {
+        Page<Project> projects = projectRepository.findByNameContaining(keyword, pageable);
+        Page<ProjectGetResponse> projectGetResponses = ProjectGetResponse.toResponse(projects);
+
+        return projectGetResponses;
+
+
     }
 }

@@ -2,8 +2,11 @@ package com.team.synergy.post;
 
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
+import com.team.synergy.post.dto.PostGetResponse;
 import com.team.synergy.project.Project;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +20,7 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public String postCreate(PostDto postDto) {
+    public String createPost(PostDto postDto) {
         Post post = Post.postCreate(postDto.getTitle(), postDto.getContent());
         postRepository.save(post);
         return "게시글 작성 성공";
@@ -27,7 +30,7 @@ public class PostService {
         return PostDto.from(postRepository.findAll());
     }
 
-    public Post getPost(Long id) {
+    public Post findPostById(Long id) {
         Optional<Post> post = this.postRepository.findById(id);
         if (post.isPresent()) {
             return post.get();
@@ -39,5 +42,18 @@ public class PostService {
     public void postDelete(Long postId) {
         Post post = postRepository.findById(postId).get();
         this.postRepository.delete(post);
+    }
+
+    public Page<PostGetResponse> getPosts(Pageable pageable) {
+        Page<Post> posts = postRepository.findAll(pageable);
+        Page<PostGetResponse> postGetResponses = PostGetResponse.toResponses(posts);
+        return postGetResponses;
+    }
+
+    public Page<PostGetResponse> searchPosts(Pageable pageable, String keyword) {
+        Page<Post> posts = postRepository.findByTitleContaining(keyword, pageable);
+        Page<PostGetResponse> postGetResponses = PostGetResponse.toResponses(posts);
+
+        return postGetResponses;
     }
 }

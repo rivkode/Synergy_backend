@@ -1,4 +1,4 @@
-package com.team.synergy.like;
+package com.team.synergy.projectlike;
 
 import com.team.synergy.member.Member;
 import com.team.synergy.project.Project;
@@ -28,12 +28,12 @@ public class ProjectLike {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @Column(name = "like_time")
+    @Column(name = "project_like_time")
     private LocalDateTime likeTime; // 좋아요 시간
 
-    @Column(name = "like_status")
+    @Column(name = "project_like_status")
     @Enumerated(EnumType.STRING)
-    private LikeStatus status; // 좋아요 상태 [LIKE, UNLIKE]
+    private ProjectLikeStatus status; // 좋아요 상태 [LIKE, UNLIKE]
 
 
 
@@ -42,16 +42,16 @@ public class ProjectLike {
         projectLike.setMember(member);
         projectLike.setProject(project);
         projectLike.setLikeTime(LocalDateTime.now());
-        projectLike.setStatus(LikeStatus.LIKE);
+        projectLike.setStatus(ProjectLikeStatus.LIKE);
         return projectLike;
     }
 
     public void cancelProjectLike() {
-        if (getStatus() == LikeStatus.UNLIKE) {
+        if (getStatus() == ProjectLikeStatus.UNLIKE) {
             throw new IllegalStateException("이미 좋아요 취소 상태입니다");
         } else {
             System.out.println("CANCEL");
-            this.setStatus(LikeStatus.UNLIKE);
+            this.setStatus(ProjectLikeStatus.UNLIKE);
         }
     }
 }
