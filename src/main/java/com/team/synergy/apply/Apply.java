@@ -34,7 +34,7 @@ public class Apply extends BaseTime {
     @Enumerated(EnumType.STRING)
     private ApplyStatus status; // 신청 상태 [APPLY, CANCEL, PROCESS, DONE]
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 

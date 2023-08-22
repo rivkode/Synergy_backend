@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectLikeController {
     private final MemberService memberService;
     private final ProjectService projectService;
-
     private final ProjectLikeService projectLikeService;
 
     @PostMapping("/{projectId}/likes")

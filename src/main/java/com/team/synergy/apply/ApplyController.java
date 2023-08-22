@@ -12,26 +12,26 @@ import org.springframework.web.bind.annotation.*;
 public class ApplyController {
     private final ApplyService applyService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<String> apply(@RequestParam("memberId") String memberId,
                                         @RequestParam("projectId") Long projectId) {
         applyService.apply(memberId, projectId);
         return ResponseEntity.ok().body("신청 성공");
     }
 
-    @PostMapping("/cancel")
-    public ResponseEntity<String> cancelApply(@RequestParam("applyId") Long applyId) {
+    @DeleteMapping()
+    public ResponseEntity<String> cancelApply(@RequestParam("id") Long applyId) {
         applyService.cancelApply(applyId);
         return ResponseEntity.ok().body("신청 취소 성공");
     }
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/{id}")
     public Result getApply(@PathVariable("id") Long id) {
         return new Result(applyService.getApplyDto(id));
     }
 
-    @GetMapping("/findByMemberId/{id}")
-    public Result getProject(@PathVariable("id") Long memberId) {
+    @GetMapping("/member/{id}")
+    public Result getProject(@PathVariable("id") String memberId) {
         return new Result(applyService.getApplyByMemberId(memberId));
     }
 }

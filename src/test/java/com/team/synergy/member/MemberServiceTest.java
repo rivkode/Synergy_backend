@@ -2,7 +2,7 @@ package com.team.synergy.member;
 
 import com.github.javafaker.Faker;
 
-import com.team.synergy.member.dto.MemberSignUpRequest;
+import com.team.synergy.member.dto.request.MemberSignUpRequest;
 import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

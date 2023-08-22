@@ -1,5 +1,6 @@
 package com.team.synergy.follow;
 
+import com.team.synergy.config.login.LoginUser;
 import com.team.synergy.follow.dto.request.CreateFollowRequest;
 import com.team.synergy.follow.dto.response.CreateFollowResponse;
 import com.team.synergy.member.Member;
@@ -17,7 +18,7 @@ public class FollowController {
     private final FollowService followService;
     private final MemberService memberService;
 
-    @RequestMapping
+    @PostMapping
     public ResponseEntity<CreateFollowResponse> createFollow(@RequestBody CreateFollowRequest request) {
         Member follower = memberService.findMemberById(request.getFollowerId());
         Member following = memberService.findMemberById(request.getFollowingId());
@@ -31,13 +32,13 @@ public class FollowController {
                 .body(createFollowResponse);
     }
 
-    @DeleteMapping("/{followingId}")
-    public ResponseEntity<Void> deleteFollow(@PathVariable String followingId) {
+    @PostMapping("/cancel/{followingId}")
+    public ResponseEntity<Void> cancelFollow(@PathVariable("followingId") String followingId) {
         // login 기능 추가해야함
-        String followerId = "1";
+        String followerId = "ab956433-e56f-4996-b55b-cb6b12cf7f4f";
         Member following = memberService.findMemberById(followingId);
         Member follower = memberService.findMemberById(followerId);
-        followService.deleteFollow(follower, following);
+        followService.cancelFollow(follower, following);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

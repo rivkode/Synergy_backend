@@ -17,9 +17,6 @@ public class Project {
     @Column(name = "project_id")
     private Long id;
 
-    @OneToOne(mappedBy = "project")
-    private Apply apply;
-
     @Column(name = "project_name")
     private String name;
 

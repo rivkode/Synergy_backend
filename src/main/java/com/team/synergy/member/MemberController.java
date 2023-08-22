@@ -1,9 +1,8 @@
 package com.team.synergy.member;
 
-import com.team.synergy.member.dto.MemberSignInRequest;
-import com.team.synergy.member.dto.MemberSignUpRequest;
+import com.team.synergy.member.dto.request.MemberSignInRequest;
+import com.team.synergy.member.dto.request.MemberSignUpRequest;
 import com.team.synergy.member.dto.response.MemberGetResponse;
-import com.team.synergy.project.dto.response.ProjectGetResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +12,6 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequiredArgsConstructor

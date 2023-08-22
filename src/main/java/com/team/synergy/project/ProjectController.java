@@ -1,8 +1,6 @@
 package com.team.synergy.project;
 
 import com.team.synergy.generic.Result;
-import com.team.synergy.post.dto.PostGetResponse;
-import com.team.synergy.project.dto.KeywordDto;
 import com.team.synergy.project.dto.ProjectDto;
 import com.team.synergy.project.dto.response.ProjectGetResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +11,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/project")

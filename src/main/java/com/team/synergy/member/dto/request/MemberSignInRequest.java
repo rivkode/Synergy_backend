@@ -1,4 +1,4 @@
-package com.team.synergy.member.dto;
+package com.team.synergy.member.dto.request;
 
 import lombok.Getter;
 

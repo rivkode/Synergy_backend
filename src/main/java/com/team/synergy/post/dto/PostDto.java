@@ -1,8 +1,8 @@
-package com.team.synergy.post;
+package com.team.synergy.post.dto;
 
+import com.team.synergy.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 import java.util.ArrayList;

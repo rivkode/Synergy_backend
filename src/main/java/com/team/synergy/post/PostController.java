@@ -1,6 +1,7 @@
 package com.team.synergy.post;
 
 import com.team.synergy.generic.Result;
+import com.team.synergy.post.dto.PostDto;
 import com.team.synergy.post.dto.PostGetResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

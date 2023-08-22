@@ -1,5 +1,6 @@
 package com.team.synergy.apply;
 
+import com.team.synergy.apply.dto.ApplyDto;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
@@ -67,7 +68,7 @@ public class ApplyService {
                 .build();
     }
 
-    public List<ApplyDto> getApplyByMemberId(Long memberId) {
+    public List<ApplyDto> getApplyByMemberId(String memberId) {
         Optional<Member> memberValue = memberRepository.findById(memberId);
         Member member = memberValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "멤버가 없습니다."));
 

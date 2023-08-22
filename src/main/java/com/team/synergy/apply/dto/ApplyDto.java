@@ -1,5 +1,6 @@
-package com.team.synergy.apply;
+package com.team.synergy.apply.dto;
 
+import com.team.synergy.apply.Apply;
 import com.team.synergy.member.dto.MemberDto;
 import com.team.synergy.project.dto.ProjectDto;
 import lombok.*;

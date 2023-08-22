@@ -1,7 +1,6 @@
 package com.team.synergy.project.dto;
 
 import com.team.synergy.project.Project;
-import com.team.synergy.project.ProjectStatus;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -43,7 +43,7 @@ public class FollowService {
     }
 
     @Transactional
-    public void deleteFollow(Member follower, Member following) {
+    public void cancelFollow(Member follower, Member following) {
         Follow follow = followRepository.findByFollowerIdAndFollowingId(follower.getId(), following.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "유효하지 않은 follow 입니다"));
         follow.cancelFollow();

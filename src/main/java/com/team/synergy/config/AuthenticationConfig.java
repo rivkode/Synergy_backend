@@ -29,7 +29,10 @@ public class AuthenticationConfig {
                 .cors().and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/members/signup", "/api/v1/members/login").permitAll() // jwt사용하는 경우 씀
-                .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated() // 윗줄의 api를 제외한 나머지는 모두 인증을 필요로 함
+                .antMatchers(HttpMethod.POST, "/**").authenticated() // 윗줄의 api를 제외한 나머지는 모두 인증을 필요로 함
+                .antMatchers(HttpMethod.GET, "/**").authenticated()
+                .antMatchers(HttpMethod.PUT, "/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/**").authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // jwt사용하는 경우 씀

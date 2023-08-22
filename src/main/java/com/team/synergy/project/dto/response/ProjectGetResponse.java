@@ -27,7 +27,6 @@ public class ProjectGetResponse {
     public static Page<ProjectGetResponse> toResponse(Page<Project> projects) {
         Page<ProjectGetResponse> projectGetResponses = projects.map(m -> ProjectGetResponse.builder()
                 .id(m.getId())
-                .apply(m.getApply())
                 .name(m.getName())
                 .content(m.getContent())
                 .field(m.getField())
