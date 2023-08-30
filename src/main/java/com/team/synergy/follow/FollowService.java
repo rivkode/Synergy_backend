@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,27 +26,28 @@ public class FollowService {
             return null;
         }
 
-        Follow savedFollow = followSave(follower, following);
+        Follow follow = request.toEntity(follower, following);
+        Follow savedFollow = followSave(follow);
 
         return CreateFollowResponse.from(savedFollow);
     }
 
     @Transactional
-    public synchronized Follow followSave(Member follower, Member following) {
-        Optional<Follow> followOptional = followRepository.findByFollowerIdAndFollowingId(follower.getId(), following.getId());
+    public synchronized Follow followSave(Follow follow) {
+        Optional<Follow> followOptional = followRepository.findById(follow.getId());
 
         if (followOptional.isPresent()) {
             return null;
         } else {
-            Follow follow = Follow.createFollow(follower, following, FollowStatus.FOLLOW);
             return this.followRepository.save(follow);
         }
     }
 
     @Transactional
     public void cancelFollow(Member follower, Member following) {
-        Follow follow = followRepository.findByFollowerIdAndFollowingId(follower.getId(), following.getId())
-                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "유효하지 않은 follow 입니다"));
-        follow.cancelFollow();
+        Follow followOptional = followRepository.findByFollowerIdAndFollowingId(follower.getId(), following.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "존재하지 않는 Follow 입니다"));
+
+        followOptional.cancelFollow();
     }
 }

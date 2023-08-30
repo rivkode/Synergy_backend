@@ -1,5 +1,6 @@
 package com.team.synergy.follow;
 
+import com.team.synergy.BaseTime;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Builder
-public class Follow {
+public class Follow extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "follow_id")
