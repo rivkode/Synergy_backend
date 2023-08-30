@@ -13,16 +13,14 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseTime {
+public abstract class BaseTime {
     /**
      * 날짜 데이터는 대부분의 데이터에 포함되는 공통속성
      * 여러 데이터에서 상속받아 사용할 수 있도록 class 구현
      */
     @CreatedDate
-    @Column(updatable = false)
     private LocalDateTime createdDate;
 
     @LastModifiedDate
-    @Column(updatable = true)
     private LocalDateTime updatedDate;
 }
