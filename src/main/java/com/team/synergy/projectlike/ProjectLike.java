@@ -1,5 +1,6 @@
 package com.team.synergy.projectlike;
 
+import com.team.synergy.BaseTime;
 import com.team.synergy.member.Member;
 import com.team.synergy.project.Project;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @DynamicUpdate
 @Entity
 @Getter @Setter
-public class ProjectLike {
+public class ProjectLike extends BaseTime {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -28,22 +29,15 @@ public class ProjectLike {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @Column(name = "project_like_time")
-    private LocalDateTime likeTime; // 좋아요 시간
-
     @Column(name = "project_like_status")
     @Enumerated(EnumType.STRING)
     private ProjectLikeStatus status; // 좋아요 상태 [LIKE, UNLIKE]
 
-
-
-    public static ProjectLike createProjectLike(Member member, Project project) {
-        ProjectLike projectLike = new ProjectLike();
-        projectLike.setMember(member);
-        projectLike.setProject(project);
-        projectLike.setLikeTime(LocalDateTime.now());
-        projectLike.setStatus(ProjectLikeStatus.LIKE);
-        return projectLike;
+    public ProjectLike(Member member, Project project) {
+        this.member = member;
+        this.project = project;
+        project.getLikes().add(this);
+        this.status = ProjectLikeStatus.LIKE;
     }
 
     public void cancelProjectLike() {

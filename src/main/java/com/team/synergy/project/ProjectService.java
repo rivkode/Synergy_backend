@@ -1,8 +1,14 @@
 package com.team.synergy.project;
 
+import com.team.synergy.apply.Apply;
+import com.team.synergy.apply.ApplyService;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
+import com.team.synergy.member.Member;
 import com.team.synergy.project.dto.ProjectDto;
+import com.team.synergy.project.dto.request.CreateProjectRequest;
+import com.team.synergy.project.dto.response.CreateProjectResponse;
+import com.team.synergy.project.dto.response.InfoProjectResponse;
 import com.team.synergy.project.dto.response.ProjectGetResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,18 +27,13 @@ public class ProjectService {
 
 
     @Transactional
-    public void projectCreate(ProjectDto projectDto) {
-        Project project = Project.builder()
-                .name(projectDto.getName())
-                .content(projectDto.getContent())
-                .field(projectDto.getField())
-                .createDate(projectDto.getCreateDate())
-                .startDate(projectDto.getStartDate())
-                .endDate(projectDto.getEndDate())
-                .projectStatus(ProjectStatus.PROCESS)
-                .build();
+    public CreateProjectResponse createProject(Member member, CreateProjectRequest request) {
+        Project savedProject = projectRepository.save(request.toEntity());
+        Apply apply = Apply.createApply(member, savedProject);
+        savedProject.getApplyList().add(apply);
 
-        projectRepository.save(project);
+        return CreateProjectResponse.from(savedProject);
+
     }
 
     public Project findProjectById(Long id) {
@@ -44,12 +45,8 @@ public class ProjectService {
         }
     }
 
-    public List<ProjectDto> findAll() {
-        return ProjectDto.fromList(projectRepository.findAll());
-    }
-
     @Transactional
-    public void projectDelete(Long projectId) {
+    public void deleteProject(Long projectId) {
         Project project = projectRepository.findById(projectId).get();
         this.projectRepository.delete(project);
     }
@@ -76,5 +73,10 @@ public class ProjectService {
         return projectGetResponses;
 
 
+    }
+
+    public InfoProjectResponse projectInfo(Long projectId) {
+        Project project = findProjectById(projectId);
+        return InfoProjectResponse.from(project);
     }
 }

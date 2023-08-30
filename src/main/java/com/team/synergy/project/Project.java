@@ -1,17 +1,20 @@
 package com.team.synergy.project;
 
+import com.team.synergy.BaseTime;
 import com.team.synergy.apply.Apply;
+import com.team.synergy.projectlike.ProjectLike;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter @Setter
-public class Project {
+public class Project extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
@@ -26,18 +29,22 @@ public class Project {
     @Column(name = "project_field")
     private String field;
 
-    @Column(name = "createDate")
-    private LocalDateTime createDate;
+    @OneToMany(
+            mappedBy = "project"
+    )
+    private List<ProjectLike> likes = new ArrayList<>();
 
-    @Column(name = "startDate")
-    private LocalDateTime startDate;
-
-    @Column(name = "endDate")
-    private LocalDateTime endDate;
+    @OneToMany(
+            mappedBy = "project"
+    )
+    private List<Apply> applyList = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private ProjectStatus projectStatus; // PROCESS, DONE
 
-
-//    Set<Member> voter;
+    public Project(String name, String content, String field) {
+        this.name = name;
+        this.content = content;
+        this.field = field;
+    }
 }

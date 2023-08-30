@@ -30,9 +30,6 @@ public class ProjectGetResponse {
                 .name(m.getName())
                 .content(m.getContent())
                 .field(m.getField())
-                .createDate(m.getCreateDate())
-                .startDate(m.getStartDate())
-                .endDate(m.getEndDate())
                 .projectStatus(m.getProjectStatus())
                 .build());
         return projectGetResponses;

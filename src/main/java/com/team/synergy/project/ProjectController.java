@@ -1,13 +1,17 @@
 package com.team.synergy.project;
 
-import com.team.synergy.generic.Result;
-import com.team.synergy.project.dto.ProjectDto;
+import com.team.synergy.member.Member;
+import com.team.synergy.member.MemberService;
+import com.team.synergy.project.dto.request.CreateProjectRequest;
+import com.team.synergy.project.dto.response.CreateProjectResponse;
+import com.team.synergy.project.dto.response.InfoProjectResponse;
 import com.team.synergy.project.dto.response.ProjectGetResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,22 +21,26 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProjectController {
     private final ProjectService projectService;
+    private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<String> projectCreate(@RequestBody ProjectDto projectDto) {
-        this.projectService.projectCreate(projectDto);
-        return ResponseEntity.ok().body("프로젝트 생성 성공");
+    public ResponseEntity<CreateProjectResponse> createProject(@RequestBody CreateProjectRequest request) {
+        Member member = memberService.findMemberById(request.getMemberId());
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(projectService.createProject(member, request));
     }
 
     @GetMapping("/{id}")
-    public Result getProject(@PathVariable("id") Long id) {
-        return new Result(projectService.findProjectById(id));
+    public ResponseEntity<InfoProjectResponse> getProject(@PathVariable("id") Long projectId) {
+        return ResponseEntity.ok()
+                .body(projectService.projectInfo(projectId));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> projectDelete(@PathVariable("id") Long projectId) {
-        this.projectService.projectDelete(projectId);
-        return ResponseEntity.ok().body("프로젝트 삭제 성공");
+    public ResponseEntity<Void> deleteProject(@PathVariable("id") Long projectId) {
+        this.projectService.deleteProject(projectId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/recent")

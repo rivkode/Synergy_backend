@@ -39,8 +39,6 @@ public class ProjectDto {
                 .name(project.getName())
                 .content(project.getContent())
                 .field(project.getField())
-                .createDate(project.getCreateDate())
-                .endDate(project.getEndDate())
                 .build();
     }
 
