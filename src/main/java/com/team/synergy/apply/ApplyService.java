@@ -1,6 +1,9 @@
 package com.team.synergy.apply;
 
 import com.team.synergy.apply.dto.ApplyDto;
+import com.team.synergy.apply.dto.request.CreateApplyRequest;
+import com.team.synergy.apply.dto.response.CreateApplyResponse;
+import com.team.synergy.apply.dto.response.ListMyApplyResponse;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
@@ -22,57 +25,29 @@ import java.util.Optional;
 public class ApplyService {
 
     private final ApplyRepository applyRepository;
-    private final MemberRepository memberRepository;
-    private final ProjectRepository projectRepository;
 
     @Transactional
-    public Long apply(String memberId, Long projectId) {
-        Optional<Member> memberValue = memberRepository.findById(memberId);
-        Member member = memberValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "멤버가 없습니다."));
+    public CreateApplyResponse createApply(Member member, Project project, CreateApplyRequest request) {
 
+        Apply apply = request.toEntity(member, project);
+        Apply savedApply = applyRepository.save(apply);
 
-        Optional<Project> projectValue = projectRepository.findById(projectId);
-        Project project = projectValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "프로젝트가 없습니다."));
-
-
-        Apply apply = Apply.createApply(member, project);
-
-        applyRepository.save(apply);
-        return apply.getId();
+        return CreateApplyResponse.from(savedApply);
     }
 
     @Transactional
-    public void cancelApply(Long applyId) {
-        Optional<Apply> applyValue = applyRepository.findById(applyId);
-        Apply apply = applyValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "해당 신청은 없습니다."));
+    public void cancelApply(Member member, Project project) {
+        Apply apply = applyRepository.findApplyByMemberAndProject(member, project)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Apply가 존재하지 않습니다"));
 
         apply.cancel();
     }
 
-    public Apply findById(Long id) {
-        Optional<Apply> apply = applyRepository.findById(id);
-        if (apply.isPresent()) {
-            return apply.get();
-        } else {
-            throw new AppException(ErrorCode.INVALID_DATA, "신청된 내역이 없습니다.");
-        }
-    }
-
-    public ApplyDto getApplyDto(Long id) {
-        Apply apply = findById(id);
-        LocalDateTime current = LocalDateTime.now();
-        return ApplyDto.builder()
-                .applyTime(current)
-                .memberDto(MemberDto.from(apply.getMember()))
-                .projectDto(ProjectDto.from(apply.getProject()))
-                .build();
-    }
-
-    public List<ApplyDto> getApplyByMemberId(String memberId) {
-        Optional<Member> memberValue = memberRepository.findById(memberId);
-        Member member = memberValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "멤버가 없습니다."));
+    @Transactional
+    public ListMyApplyResponse listMyApply(Member member) {
 
         List<Apply> applyList = applyRepository.findAppliesByMember(member);
-        return ApplyDto.of(applyList);
+        List<ApplyDto> applyDtoList = ApplyDto.of(applyList);
+        return ListMyApplyResponse.from(applyDtoList);
     }
 }

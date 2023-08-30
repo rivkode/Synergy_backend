@@ -45,15 +45,6 @@ public class Apply extends BaseTime {
      * 연관관계 주인을 떠나서 속성 객체에 양쪽의 값들을 넣어줘야 하기 떄문에 메서드 작성
      * 물론 비즈니스 로직에 양쪽 객체를 통해 세팅할 수 있지만 실수를 방지하기 위해
      */
-//    void setMember(Member member) {
-//        this.member = member;
-//        member.getApplyList().add(this);
-//    }
-//
-//    void setProject(Project project) {
-//        this.project = project;
-//        project.setApply(this);
-//    }
 
     //==생성 메서드==//
     public static Apply createApply(Member member, Project project) {
@@ -70,8 +61,8 @@ public class Apply extends BaseTime {
         if (getStatus() == ApplyStatus.DONE) {
             throw new IllegalStateException("이미 팀 구성이 완료되었습니다");
         } else {
-            System.out.println("CANCEL");
-            this.setStatus(ApplyStatus.CANCEL); // Apply 상태를 CANCEL 로 변경
+            // Apply 상태를 CANCEL 로 변경
+            this.setStatus(ApplyStatus.CANCEL);
         }
     }
 
