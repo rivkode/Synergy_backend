@@ -8,7 +8,6 @@ import lombok.Getter;
 
 @Getter
 public class CreatePostLikeRequest {
-    private Long postId;
 
     @NotNull
     private String memberId;

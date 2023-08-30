@@ -31,11 +31,11 @@ public class PostLikeController {
     }
 
     @DeleteMapping("/{postId}/likes")
-    public ResponseEntity<DeletePostLikeResponse> deletePostLike(@PathVariable Long postId, @RequestBody DeletePostLikeRequest request) {
+    public ResponseEntity<Void> deletePostLike(@PathVariable Long postId, @RequestBody DeletePostLikeRequest request) {
         Member member = memberService.findMemberById(request.getMemberId());
         Post post = postService.findPostById(postId);
+        postLikeService.deletePostLike(member, post);
 
-        return ResponseEntity.ok()
-                .body(postLikeService.deletePostLike(member, post));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -2,8 +2,12 @@ package com.team.synergy.post;
 
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
+import com.team.synergy.member.Member;
 import com.team.synergy.post.dto.PostDto;
 import com.team.synergy.post.dto.PostGetResponse;
+import com.team.synergy.post.dto.request.CreatePostRequest;
+import com.team.synergy.post.dto.response.CreatePostResponse;
+import com.team.synergy.post.dto.response.InfoPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,14 +23,9 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public String createPost(PostDto postDto) {
-        Post post = Post.postCreate(postDto.getTitle(), postDto.getContent());
-        postRepository.save(post);
-        return "게시글 작성 성공";
-    }
-
-    public List<PostDto> findAll() {
-        return PostDto.from(postRepository.findAll());
+    public CreatePostResponse createPost(Member member, CreatePostRequest request) {
+        Post savedPost = postRepository.save(request.toEntity(member));
+        return CreatePostResponse.from(savedPost);
     }
 
     public Post findPostById(Long id) {
@@ -34,13 +33,12 @@ public class PostService {
         if (post.isPresent()) {
             return post.get();
         } else {
-            throw new AppException(ErrorCode.INVALID_DATA, "게시글이 없습니다");
+            throw new AppException(ErrorCode.INVALID_DATA, "find 할 게시글이 없습니다");
         }
     }
 
-    public void postDelete(Long postId) {
-        Post post = postRepository.findById(postId).get();
-        this.postRepository.delete(post);
+    public void deletePost(Post post) {
+        postRepository.delete(post);
     }
 
     public Page<PostGetResponse> getPosts(Pageable pageable) {
@@ -54,5 +52,10 @@ public class PostService {
         Page<PostGetResponse> postGetResponses = PostGetResponse.toResponses(posts);
 
         return postGetResponses;
+    }
+
+    public InfoPostResponse postInfo(Long postId) {
+        Post post = findPostById(postId);
+        return InfoPostResponse.from(post);
     }
 }

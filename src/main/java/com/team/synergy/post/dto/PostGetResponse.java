@@ -29,9 +29,7 @@ public class PostGetResponse {
                 .id(m.getId())
                 .title(m.getTitle())
                 .content(m.getContent())
-                .likes(m.getLikes())
-                .createDate(m.getCreateDate())
-                .modifiedDate(m.getModifiedDate())
+                .createDate(m.getCreatedDate())
                 .build());
         return postGetResponses;
     }
