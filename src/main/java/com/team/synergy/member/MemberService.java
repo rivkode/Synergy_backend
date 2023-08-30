@@ -2,6 +2,9 @@ package com.team.synergy.member;
 
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
+import com.team.synergy.member.dto.response.CreateMemberResponse;
+import com.team.synergy.member.dto.response.InfoMemberResponse;
+import com.team.synergy.member.dto.response.LoginMemberResponse;
 import com.team.synergy.member.dto.response.MemberGetResponse;
 import com.team.synergy.utils.JwtUtil;
 import com.team.synergy.member.dto.request.MemberSignInRequest;
@@ -27,17 +30,18 @@ public class MemberService {
     @Value("${jwt.token.secret}")
     private String secretKey;
 
-    public String signup(MemberSignUpRequest request) {
+    @Transactional
+    public CreateMemberResponse signup(MemberSignUpRequest request) {
         memberRepository.findByEmail(request.getEmail())
                 .ifPresent(member -> {
                     throw new AppException((ErrorCode.MEMBERNAME_DUPLICATED), request.getEmail() + "는 이미 존재합니다");
                 });
-        memberRepository.save(new Member(request.getName(), encoder.encode(request.getPassword()), request.getEmail()));
+        Member savedMember = memberRepository.save(new Member(request.getName(), encoder.encode(request.getPassword()), request.getEmail()));
 
-        return "SUCCESS";
+        return CreateMemberResponse.from(savedMember);
     }
 
-    public String login(MemberSignInRequest request) {
+    public LoginMemberResponse login(MemberSignInRequest request) {
         Member savedMember = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, request.getEmail() + "은 존재하지 않습니다"));
 
@@ -45,7 +49,9 @@ public class MemberService {
             throw new AppException(ErrorCode.INVALID_PASSWORD, "패스워드를 잘못 입력하였습니다");
         }
 
-        return JwtUtil.createJwt(savedMember.getEmail(), secretKey, expiredTimeMs);
+        String token = JwtUtil.createJwt(savedMember.getEmail(), secretKey, expiredTimeMs);
+
+        return LoginMemberResponse.from(token);
 
     }
 
@@ -60,5 +66,11 @@ public class MemberService {
 
         return memberGetResponses;
 
+    }
+
+    @Transactional
+    public InfoMemberResponse memberInfo(String memberId) {
+        Member member = findMemberById(memberId);
+        return InfoMemberResponse.from(member);
     }
 }

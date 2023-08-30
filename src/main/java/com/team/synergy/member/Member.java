@@ -1,9 +1,14 @@
 package com.team.synergy.member;
 
 import com.team.synergy.BaseTime;
+import com.team.synergy.apply.Apply;
+import com.team.synergy.post.Post;
+import com.team.synergy.project.Project;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -22,6 +27,17 @@ public class Member extends BaseTime {
 
     @Column(name = "member_email")
     private String email;
+
+    @OneToMany(
+            mappedBy = "member"
+    )
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "member"
+    )
+    private List<Apply> applyList = new ArrayList<>();
+
 
     public void setName(String name) {
         this.name = name;
