@@ -13,9 +13,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RequiredArgsConstructor
 @Service
@@ -25,7 +28,7 @@ public class MemberService {
 
     private final BCryptPasswordEncoder encoder;
 
-    private Long expiredTimeMs = 1000 * 24 * 60 * 60L; // 1일
+    private Long expiredTimeMs = 1000 * 24 * 60 * 30 * 60L; // 30일
 
     @Value("${jwt.token.secret}")
     private String secretKey;
@@ -42,14 +45,14 @@ public class MemberService {
     }
 
     public LoginMemberResponse login(MemberSignInRequest request) {
-        Member savedMember = memberRepository.findByEmail(request.getEmail())
+        Member findMember = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, request.getEmail() + "은 존재하지 않습니다"));
 
-        if (!encoder.matches(request.getPassword(), savedMember.getPassword())) {
+        if (!encoder.matches(request.getPassword(), findMember.getPassword())) {
             throw new AppException(ErrorCode.INVALID_PASSWORD, "패스워드를 잘못 입력하였습니다");
         }
 
-        String token = JwtUtil.createJwt(savedMember.getEmail(), secretKey, expiredTimeMs);
+        String token = JwtUtil.createJwt(findMember.getId(), secretKey, expiredTimeMs);
 
         return LoginMemberResponse.from(token);
 
@@ -72,5 +75,14 @@ public class MemberService {
     public InfoMemberResponse memberInfo(String memberId) {
         Member member = findMemberById(memberId);
         return InfoMemberResponse.from(member);
+    }
+
+    public Member findMemberIdByToken(HttpServletRequest request) {
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = authorization.split(" ")[1];
+        String memberId = JwtUtil.getId(token, secretKey);
+
+        Member member = findMemberById(memberId);
+        return member;
     }
 }

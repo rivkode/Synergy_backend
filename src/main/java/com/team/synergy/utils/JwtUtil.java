@@ -7,18 +7,18 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 
 public class JwtUtil {
-    public static String getUserName(String token, String secretKey) {
+    public static String getId(String token, String secretKey) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-                .getBody().get("userName", String.class);
+                .getBody().get("id", String.class);
     }
 
     public static boolean isExpired(String token, String secretKey) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
                 .getBody().getExpiration().before(new Date());
     }
-    public static String createJwt(String userName, String secretKey, long expireTimeMs) {
+    public static String createJwt(String id, String secretKey, long expireTimeMs) {
         Claims claims = Jwts.claims(); // 일종의 map
-        claims.put("userName", userName);
+        claims.put("id", id);
 
         return Jwts.builder()
                 .setClaims(claims)

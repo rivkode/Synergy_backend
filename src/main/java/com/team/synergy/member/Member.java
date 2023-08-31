@@ -28,6 +28,16 @@ public class Member extends BaseTime {
     @Column(name = "member_email")
     private String email;
 
+    private String avatar;
+
+    private String backgroundImage;
+
+    private String major;
+
+    private String temperature;
+
+    private String bio;
+
     @OneToMany(
             mappedBy = "member"
     )
@@ -51,11 +61,16 @@ public class Member extends BaseTime {
         this.email = email;
     }
 
+
+
     public Member(String name, String password, String email) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.password = password;
         this.email = email;
+        this.avatar = "";
+        this.backgroundImage = "";
+        this.temperature = "36.5";
     }
 
     protected Member() {
