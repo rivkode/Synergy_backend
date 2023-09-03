@@ -6,17 +6,15 @@ import com.team.synergy.project.Project;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicUpdate
 @Entity
-@Getter @Setter
+@Getter
 public class ProjectLike extends BaseTime {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,19 +31,14 @@ public class ProjectLike extends BaseTime {
     @Enumerated(EnumType.STRING)
     private ProjectLikeStatus status; // 좋아요 상태 [LIKE, UNLIKE]
 
+    public void setStatus(ProjectLikeStatus status) {
+        this.status = status;
+    }
+
     public ProjectLike(Member member, Project project) {
         this.member = member;
         this.project = project;
         project.getLikes().add(this);
         this.status = ProjectLikeStatus.LIKE;
-    }
-
-    public void cancelProjectLike() {
-        if (getStatus() == ProjectLikeStatus.UNLIKE) {
-            throw new IllegalStateException("이미 좋아요 취소 상태입니다");
-        } else {
-            System.out.println("CANCEL");
-            this.setStatus(ProjectLikeStatus.UNLIKE);
-        }
     }
 }
