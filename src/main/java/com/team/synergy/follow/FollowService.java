@@ -2,34 +2,40 @@ package com.team.synergy.follow;
 
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
-import com.team.synergy.follow.dto.request.CreateFollowRequest;
-import com.team.synergy.follow.dto.response.CreateFollowResponse;
+import com.team.synergy.follow.dto.request.FollowType;
 import com.team.synergy.member.Member;
+import com.team.synergy.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class FollowService {
     private final FollowRepository followRepository;
+    private final MemberService memberService;
 
     @Transactional
-    public CreateFollowResponse createFollow(Member follower, Member following, CreateFollowRequest request) {
-        List<String> followingIdList = followRepository.findFollowingIdsByFollowerId(request.getFollowerId());
-        if (followingIdList.contains(request.getFollowingId())) {
-            // 아무것도 수행하지 않음
-            return null;
+    public void updateFollow(String followerId, String followingId, FollowType type) {
+        FollowStatus status;
+
+        if (type.getFollowType().equals("follow")) {
+            status = FollowStatus.FOLLOW;
+        } else {
+            status = FollowStatus.UNFOLLOW;
         }
 
-        Follow follow = request.toEntity(follower, following);
-        Follow savedFollow = followSave(follow);
-
-        return CreateFollowResponse.from(savedFollow);
+        Optional<Follow> followOptional = followRepository.findByFollowerIdAndFollowingId(followerId, followingId);
+        if (followOptional.isPresent()) {
+            followOptional.get().setStatus(status);
+        } else {
+            Member follower = memberService.findMemberById(followerId);
+            Member following = memberService.findMemberById(followingId);
+            Follow follow = new Follow(follower, following);
+            followRepository.save(follow);
+        }
     }
 
     @Transactional
