@@ -6,7 +6,6 @@ import lombok.Getter;
 
 @Getter
 public class CreatePostRequest {
-    private String memberId;
     private String title;
     private String content;
 

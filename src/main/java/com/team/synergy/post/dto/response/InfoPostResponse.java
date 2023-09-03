@@ -6,17 +6,19 @@ import com.team.synergy.postlike.PostLike;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
 
 @AllArgsConstructor
 @Getter
 public class InfoPostResponse {
+    private Long postId;
     private String title;
     private String content;
-    private Member member;
-    private List<PostLike> likes;
+    private String authorName;
+    private String authorId;
+    private String authorAvatar;
+    private int likes;
 
     public static InfoPostResponse from(Post post) {
-        return new InfoPostResponse(post.getTitle(), post.getContent(), post.getMember(), post.getLikes());
+        return new InfoPostResponse(post.getId() ,post.getTitle(), post.getContent(), post.getMember().getName(), post.getMember().getId(), "", post.getLikes().size());
     }
 }

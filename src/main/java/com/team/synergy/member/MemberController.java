@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/members")
+@RequestMapping("/members")
 public class MemberController {
     private final MemberService memberService;
 
@@ -34,7 +34,7 @@ public class MemberController {
 
     @GetMapping("/me/info")
     public ResponseEntity<MeInfoResponse> getMemberFromToken(HttpServletRequest request) {
-        Member member = memberService.findMemberIdByToken(request);
+        Member member = memberService.findMemberByToken(request);
 
         return ResponseEntity.ok()
                 .body(MeInfoResponse.from(member));

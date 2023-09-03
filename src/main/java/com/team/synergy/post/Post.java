@@ -25,6 +25,7 @@ public class Post extends BaseTime {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     private String title;
@@ -39,13 +40,6 @@ public class Post extends BaseTime {
     @Basic(fetch = FetchType.LAZY)
     @Formula("(select count(1) from post_like p where p.post_id = post_id)")
     private int postLikeCount;
-
-    public static Post postCreate(String title, String content) {
-        return Post.builder()
-                .title(title)
-                .content(content)
-                .build();
-    }
 
     public void deletePostLike(PostLike postLike) {
         likes.removeIf(postLike1 -> postLike1.getId().equals(postLike.getId()));

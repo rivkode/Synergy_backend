@@ -4,6 +4,7 @@ import com.team.synergy.BaseTime;
 import com.team.synergy.apply.Apply;
 import com.team.synergy.post.Post;
 import com.team.synergy.project.Project;
+import com.team.synergy.projectmember.ProjectMember;
 import lombok.*;
 
 import javax.persistence.*;
@@ -47,6 +48,11 @@ public class Member extends BaseTime {
             mappedBy = "member"
     )
     private List<Apply> applyList = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "member"
+    )
+    private List<ProjectMember> projects = new ArrayList<>();
 
 
     public void setName(String name) {

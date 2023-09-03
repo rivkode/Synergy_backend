@@ -77,12 +77,17 @@ public class MemberService {
         return InfoMemberResponse.from(member);
     }
 
-    public Member findMemberIdByToken(HttpServletRequest request) {
+    public Member findMemberByToken(HttpServletRequest request) {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         String token = authorization.split(" ")[1];
         String memberId = JwtUtil.getId(token, secretKey);
 
-        Member member = findMemberById(memberId);
-        return member;
+        return findMemberById(memberId);
+    }
+
+    public String findMemberIdByToken(HttpServletRequest request) {
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = authorization.split(" ")[1];
+        return JwtUtil.getId(token, secretKey);
     }
 }

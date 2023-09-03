@@ -3,6 +3,7 @@ package com.team.synergy.project;
 import com.team.synergy.member.Member;
 import com.team.synergy.member.MemberService;
 import com.team.synergy.project.dto.request.CreateProjectRequest;
+import com.team.synergy.project.dto.request.ProjectMemberRequest;
 import com.team.synergy.project.dto.response.CreateProjectResponse;
 import com.team.synergy.project.dto.response.InfoProjectResponse;
 import com.team.synergy.project.dto.response.ProjectGetResponse;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @RestController
 @RequestMapping("/project")
@@ -24,8 +27,9 @@ public class ProjectController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<CreateProjectResponse> createProject(@RequestBody CreateProjectRequest request) {
-        Member member = memberService.findMemberById(request.getMemberId());
+    public ResponseEntity<CreateProjectResponse> createProject(HttpServletRequest servletRequest, @RequestBody CreateProjectRequest request) {
+        String memberId = memberService.findMemberIdByToken(servletRequest);
+        Member member = memberService.findMemberById(memberId);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(projectService.createProject(member, request));
@@ -44,7 +48,7 @@ public class ProjectController {
     }
 
     @GetMapping("/recent")
-    public ResponseEntity<Page<ProjectGetResponse>> getProjectList(@PageableDefault(size = 5, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<ProjectGetResponse>> getProjectList(@PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ProjectGetResponse> projectGetResponses = projectService.getProjects(pageable);
 
         return ResponseEntity.ok()
@@ -52,7 +56,7 @@ public class ProjectController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<ProjectGetResponse>> searchProjectList(@PageableDefault(size = 5, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String keyword) {
+    public ResponseEntity<Page<ProjectGetResponse>> searchProjectList(@PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String keyword) {
         Page<ProjectGetResponse> projectGetResponses = projectService.searchProjects(pageable, keyword);
 
         return ResponseEntity.ok()

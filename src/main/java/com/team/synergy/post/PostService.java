@@ -25,6 +25,7 @@ public class PostService {
     @Transactional
     public CreatePostResponse createPost(Member member, CreatePostRequest request) {
         Post savedPost = postRepository.save(request.toEntity(member));
+        System.out.println(savedPost.getMember().getName());
         return CreatePostResponse.from(savedPost);
     }
 
@@ -43,6 +44,7 @@ public class PostService {
 
     public Page<PostGetResponse> getPosts(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
+        System.out.println("post 개수" + posts.getTotalElements());
         Page<PostGetResponse> postGetResponses = PostGetResponse.toResponses(posts);
         return postGetResponses;
     }

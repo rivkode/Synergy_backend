@@ -1,23 +1,32 @@
 package com.team.synergy.project.dto.response;
 
-import com.team.synergy.apply.Apply;
 import com.team.synergy.project.Project;
-import com.team.synergy.projectlike.ProjectLike;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
 @Getter
 public class InfoProjectResponse {
+    private Long id;
     private String name;
     private String content;
     private String field;
-    private List<ProjectLike> likes;
-    private List<Apply> applyList;
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
+    private int likes;
+    private List<String> teamMemberIds;
 
-    public static InfoProjectResponse from(Project project) {
-        return new InfoProjectResponse(project.getName(), project.getContent(), project.getField(), project.getLikes(), project.getApplyList());
+
+    public static InfoProjectResponse from(Project project, List<String> projectMemberIds) {
+
+        return new InfoProjectResponse(
+                project.getId(), project.getName(), project.getContent(), project.getField()
+                , project.getStartAt(), project.getEndAt()
+                , project.getLikes().size(), projectMemberIds
+        );
     }
+
 }

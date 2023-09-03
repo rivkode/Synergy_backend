@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/post")
 @RequiredArgsConstructor
@@ -24,9 +26,11 @@ public class PostController {
     private final MemberService memberService;
 
     @PostMapping()
-    public ResponseEntity<CreatePostResponse> postCreate(@RequestBody CreatePostRequest request) {
-        Member member = memberService.findMemberById(request.getMemberId());
-        return ResponseEntity.ok().body(postService.createPost(member, request));
+    public ResponseEntity<CreatePostResponse> createPost(HttpServletRequest servletRequest, @RequestBody CreatePostRequest request) {
+        String memberId = memberService.findMemberIdByToken(servletRequest);
+        Member member = memberService.findMemberById(memberId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(postService.createPost(member, request));
     }
 
     @GetMapping("/{id}")
@@ -37,7 +41,7 @@ public class PostController {
 
 
     @GetMapping("/recent")
-    public ResponseEntity<Page<PostGetResponse>> getPostList(@PageableDefault(size = 13, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<PostGetResponse>> getPostList(@PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<PostGetResponse> postGetResponses = postService.getPosts(pageable);
 
         return ResponseEntity.ok()
@@ -46,7 +50,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> postDelete(@PathVariable("id") Long postId) {
+    public ResponseEntity<Void> deletePost(@PathVariable("id") Long postId) {
         Post post = postService.findPostById(postId);
         postService.deletePost(post);
 
@@ -54,7 +58,7 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<PostGetResponse>> searchPostList(@PageableDefault(size = 13, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String keyword) {
+    public ResponseEntity<Page<PostGetResponse>> searchPostList(@PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String keyword) {
         Page<PostGetResponse> postGetResponses = postService.searchPosts(pageable, keyword);
 
         return ResponseEntity.ok()

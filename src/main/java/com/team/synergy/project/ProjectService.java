@@ -1,7 +1,5 @@
 package com.team.synergy.project;
 
-import com.team.synergy.apply.Apply;
-import com.team.synergy.apply.ApplyService;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
@@ -10,13 +8,13 @@ import com.team.synergy.project.dto.request.CreateProjectRequest;
 import com.team.synergy.project.dto.response.CreateProjectResponse;
 import com.team.synergy.project.dto.response.InfoProjectResponse;
 import com.team.synergy.project.dto.response.ProjectGetResponse;
+import com.team.synergy.projectmember.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,16 +22,16 @@ import java.util.Optional;
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    private final ProjectMemberService projectMemberService;
 
 
     @Transactional
     public CreateProjectResponse createProject(Member member, CreateProjectRequest request) {
-        Project savedProject = projectRepository.save(request.toEntity());
-        Apply apply = Apply.createApply(member, savedProject);
-        savedProject.getApplyList().add(apply);
+        Project project = request.toEntity();
+        Project savedProject = projectRepository.save(project);
+        projectMemberService.createProjectMember(project, member);
 
         return CreateProjectResponse.from(savedProject);
-
     }
 
     public Project findProjectById(Long id) {
@@ -71,12 +69,11 @@ public class ProjectService {
         Page<ProjectGetResponse> projectGetResponses = ProjectGetResponse.toResponse(projects);
 
         return projectGetResponses;
-
-
     }
 
     public InfoProjectResponse projectInfo(Long projectId) {
         Project project = findProjectById(projectId);
-        return InfoProjectResponse.from(project);
+            List<String> projectMemberIds = projectMemberService.getProjectMemberIds(projectId);
+        return InfoProjectResponse.from(project, projectMemberIds);
     }
 }
