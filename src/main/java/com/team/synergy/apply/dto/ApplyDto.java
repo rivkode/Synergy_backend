@@ -26,7 +26,6 @@ public class ApplyDto {
 
     public static ApplyDto from(Apply apply){
         return ApplyDto.builder()
-                .applyTime(apply.getApplyTime())
                 .memberDto(MemberDto.from(apply.getMember()))
                 .projectDto(ProjectDto.from(apply.getProject()))
                 .build();

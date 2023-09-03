@@ -11,6 +11,6 @@ public class CreateApplyRequest {
     private Long projectId;
 
     public Apply toEntity(Member member, Project project) {
-        return Apply.createApply(member, project);
+        return new Apply(member, project);
     }
 }
