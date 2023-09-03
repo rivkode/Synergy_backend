@@ -19,8 +19,8 @@ public abstract class BaseTime {
      * 여러 데이터에서 상속받아 사용할 수 있도록 class 구현
      */
     @CreatedDate
-    private LocalDateTime createdDate;
+    private LocalDateTime createAt;
 
     @LastModifiedDate
-    private LocalDateTime updatedDate;
+    private LocalDateTime updateAt;
 }
