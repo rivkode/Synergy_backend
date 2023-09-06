@@ -2,6 +2,7 @@ package com.team.synergy.member;
 
 import com.team.synergy.BaseTime;
 import com.team.synergy.apply.Apply;
+import com.team.synergy.comment.Comment;
 import com.team.synergy.post.Post;
 import com.team.synergy.project.Project;
 import com.team.synergy.projectmember.ProjectMember;
@@ -53,6 +54,11 @@ public class Member extends BaseTime {
             mappedBy = "member"
     )
     private List<ProjectMember> projects = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "member"
+    )
+    private List<Comment> comments = new ArrayList<>();
 
 
     public void setName(String name) {

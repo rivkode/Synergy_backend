@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -89,5 +91,14 @@ public class MemberService {
         String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         String token = authorization.split(" ")[1];
         return JwtUtil.getId(token, secretKey);
+    }
+
+    public List<Member> findMembersByMemberIds(List<String> memberIds) {
+        List<Member> members = new ArrayList<>();
+
+        for (String id: memberIds) {
+            members.add(findMemberById(id));
+        }
+        return members;
     }
 }

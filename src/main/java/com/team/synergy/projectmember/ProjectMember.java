@@ -4,7 +4,6 @@ import com.team.synergy.member.Member;
 import com.team.synergy.project.Project;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 

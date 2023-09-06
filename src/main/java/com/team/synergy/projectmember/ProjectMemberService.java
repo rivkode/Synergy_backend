@@ -3,7 +3,6 @@ package com.team.synergy.projectmember;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
-import com.team.synergy.member.MemberService;
 import com.team.synergy.project.Project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProjectMemberService {
     private final ProjectMemberRepository projectMemberRepository;
-    private final MemberService memberService;
 
 
 
@@ -44,5 +42,9 @@ public class ProjectMemberService {
     @Transactional
     public List<String> getProjectMemberIds(Long projectId) {
         return projectMemberRepository.findMemberIdsByProjectId(projectId);
+    }
+
+    public List<Long> findProjectIdsByMemberId(String memberId) {
+        return projectMemberRepository.findProjectIdsByMemberId(memberId);
     }
 }

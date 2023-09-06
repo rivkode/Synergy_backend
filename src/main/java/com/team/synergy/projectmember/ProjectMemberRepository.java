@@ -17,4 +17,7 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Lo
 
     @Query(value = "SELECT pm.member_id FROM project_member pm WHERE pm.project_id = :projectId", nativeQuery = true)
     List<String> findMemberIdsByProjectId(@Param("projectId") Long projectId);
+
+    @Query(value = "SELECT pm.project_id FROM project_member pm WHERE pm.member_id = :memberId", nativeQuery = true)
+    List<Long> findProjectIdsByMemberId(String memberId);
 }
