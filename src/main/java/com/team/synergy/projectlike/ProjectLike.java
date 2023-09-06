@@ -3,6 +3,7 @@ package com.team.synergy.projectlike;
 import com.team.synergy.BaseTime;
 import com.team.synergy.member.Member;
 import com.team.synergy.project.Project;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
 @Entity
 @Getter

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/projects")
 @RequiredArgsConstructor
 public class ProjectLikeController {
     private final MemberService memberService;

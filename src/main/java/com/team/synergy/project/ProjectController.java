@@ -3,14 +3,15 @@ package com.team.synergy.project;
 import com.team.synergy.member.Member;
 import com.team.synergy.member.MemberService;
 import com.team.synergy.project.dto.request.CreateProjectRequest;
-import com.team.synergy.project.dto.request.ProjectMemberRequest;
 import com.team.synergy.project.dto.response.CreateProjectResponse;
 import com.team.synergy.project.dto.response.InfoProjectResponse;
+import com.team.synergy.project.dto.response.ListInfoProjectResponse;
 import com.team.synergy.project.dto.response.ProjectGetResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/projects")
 @RequiredArgsConstructor
 public class ProjectController {
     private final ProjectService projectService;
@@ -43,7 +44,7 @@ public class ProjectController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable("id") Long projectId) {
-        this.projectService.deleteProject(projectId);
+        projectService.deleteProject(projectId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -61,5 +62,11 @@ public class ProjectController {
 
         return ResponseEntity.ok()
                 .body(projectGetResponses);
+    }
+
+    @GetMapping
+    public ResponseEntity<ListInfoProjectResponse> getProjectsByMember(@Param("memberId") String memberId) {
+        return ResponseEntity.ok()
+                .body(projectService.getProjectsByMember(memberId));
     }
 }

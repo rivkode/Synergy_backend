@@ -2,7 +2,6 @@ package com.team.synergy.project;
 
 import com.team.synergy.BaseTime;
 import com.team.synergy.apply.Apply;
-import com.team.synergy.member.Member;
 import com.team.synergy.projectlike.ProjectLike;
 import com.team.synergy.projectmember.ProjectMember;
 import lombok.*;
@@ -14,7 +13,7 @@ import java.util.List;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter @Setter
 public class Project extends BaseTime {

@@ -1,12 +1,15 @@
 package com.team.synergy.project;
 
+import com.team.synergy.apply.ApplyService;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
+import com.team.synergy.member.MemberService;
 import com.team.synergy.project.dto.ProjectDto;
 import com.team.synergy.project.dto.request.CreateProjectRequest;
 import com.team.synergy.project.dto.response.CreateProjectResponse;
 import com.team.synergy.project.dto.response.InfoProjectResponse;
+import com.team.synergy.project.dto.response.ListInfoProjectResponse;
 import com.team.synergy.project.dto.response.ProjectGetResponse;
 import com.team.synergy.projectmember.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +27,8 @@ import java.util.Optional;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberService projectMemberService;
+    private final MemberService memberService;
+    private final ApplyService applyService;
 
 
     @Transactional
@@ -45,8 +51,21 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(Long projectId) {
-        Project project = projectRepository.findById(projectId).get();
-        this.projectRepository.delete(project);
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+
+        if (projectOptional.isPresent()) {
+            List<String> memberIds = projectMemberService.getProjectMemberIds(projectId);
+            List<Member> members = memberService.findMembersByMemberIds(memberIds);
+
+            for (Member m : members) {
+                projectMemberService.deleteProjectMember(projectOptional.get(), m);
+                applyService.deleteApply(m, projectOptional.get());
+            }
+
+            projectRepository.delete(projectOptional.get());
+        } else {
+            throw new AppException(ErrorCode.INVALID_DATA, "프로젝트가 존재하지 않습니다");
+        }
     }
 
     public List<ProjectDto> findByKeyword(String keyword) {
@@ -75,5 +94,17 @@ public class ProjectService {
         Project project = findProjectById(projectId);
             List<String> projectMemberIds = projectMemberService.getProjectMemberIds(projectId);
         return InfoProjectResponse.from(project, projectMemberIds);
+    }
+
+    public ListInfoProjectResponse getProjectsByMember(String memberId) {
+
+        List<Long> projectIds = projectMemberService.findProjectIdsByMemberId(memberId);
+        List<InfoProjectResponse> infoProjectResponses = new ArrayList<>();
+
+        for (int i = 0; i < projectIds.size(); i++) {
+            infoProjectResponses.add(projectInfo(projectIds.get(i)));
+        }
+
+        return new ListInfoProjectResponse(infoProjectResponses);
     }
 }
