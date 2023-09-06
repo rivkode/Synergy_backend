@@ -19,13 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
-@RequestMapping("/apply")
+@RequestMapping("/applies")
 @RequiredArgsConstructor
 public class ApplyController {
     private final ApplyService applyService;
     private final MemberService memberService;
     private final ProjectService projectService;
-
     private final ProjectMemberService projectMemberService;
 
     @PostMapping("/{projectId}")
@@ -66,6 +65,12 @@ public class ApplyController {
     }
 
     // 내가 신청한 applyProjectList 가져오기
+
+    /**
+     * 수정필요
+     * @param servletRequest
+     * @return
+     */
     @GetMapping("/me")
     public ResponseEntity<MemberIdsResponse> listApplyByMember(HttpServletRequest servletRequest) {
         String memberId = memberService.findMemberIdByToken(servletRequest);
@@ -80,6 +85,6 @@ public class ApplyController {
         Project project = projectService.findProjectById(projectId);
 
         return ResponseEntity.ok()
-                .body(applyService.findProjectIdsByMemberId(project));
+                .body(applyService.findMemberIdsByProjectId(project));
     }
 }

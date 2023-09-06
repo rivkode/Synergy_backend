@@ -48,7 +48,7 @@ public class ApplyService {
     }
 
     @Transactional
-    public ProjectIdsResponse findProjectIdsByMemberId(Project project) {
+    public ProjectIdsResponse findMemberIdsByProjectId(Project project) {
         List<String> memberIds = applyRepository.findProjectIdsByMemberId(project.getId());
 
         return ProjectIdsResponse.createWithMemberIds(memberIds);
@@ -59,7 +59,7 @@ public class ApplyService {
         Apply apply = applyRepository.findApplyByMemberAndProject(member, project)
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Apply가 존재하지 않습니다"));
         apply.setStatus(ApplyStatus.DONE);
-        applyRepository.save(apply);
+        applyRepository.delete(apply);
     }
 
     public void reject(Project project, Member member) {
