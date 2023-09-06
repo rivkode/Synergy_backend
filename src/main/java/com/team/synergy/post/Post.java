@@ -1,20 +1,19 @@
 package com.team.synergy.post;
 
 import com.team.synergy.BaseTime;
+import com.team.synergy.comment.Comment;
 import com.team.synergy.member.Member;
 import com.team.synergy.postlike.PostLike;
 import lombok.*;
 import org.hibernate.annotations.Formula;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
 @Builder
@@ -36,6 +35,12 @@ public class Post extends BaseTime {
             mappedBy = "post"
     )
     private List<PostLike> likes = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "post",
+            fetch = FetchType.LAZY
+    )
+    private List<Comment> comments = new ArrayList<>();
 
     @Basic(fetch = FetchType.LAZY)
     @Formula("(select count(1) from post_like p where p.post_id = post_id)")

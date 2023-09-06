@@ -22,6 +22,12 @@ public class PostGetResponse {
     private String authorAvatar;
     private Integer likes;
 
+    /**
+     * udate, createAt 추가 필요
+     * @param posts
+     * @return
+     */
+
     public static Page<PostGetResponse> toResponses(Page<Post> posts) {
         Page<PostGetResponse> postGetResponses = posts.map(post -> PostGetResponse.builder()
                 .id(post.getId())

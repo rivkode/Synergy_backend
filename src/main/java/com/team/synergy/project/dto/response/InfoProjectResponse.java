@@ -14,6 +14,7 @@ public class InfoProjectResponse {
     private String name;
     private String content;
     private String field;
+    private String leaderId;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
     private int likes;
@@ -23,8 +24,8 @@ public class InfoProjectResponse {
     public static InfoProjectResponse from(Project project, List<String> projectMemberIds) {
 
         return new InfoProjectResponse(
-                project.getId(), project.getName(), project.getContent(), project.getField()
-                , project.getStartAt(), project.getEndAt()
+                project.getId(), project.getName(), project.getContent(), project.getField(),
+                project.getLeaderId() , project.getStartAt(), project.getEndAt()
                 , project.getLikes().size(), projectMemberIds
         );
     }

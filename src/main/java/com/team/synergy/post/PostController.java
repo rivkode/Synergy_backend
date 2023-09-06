@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
 
@@ -63,5 +64,14 @@ public class PostController {
 
         return ResponseEntity.ok()
                 .body(postGetResponses);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<PostGetResponse>> getPostListByMember(@PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable, @Param("memberId") String memberId) {
+        Page<PostGetResponse> postGetResponses = postService.getPostsByMember(pageable,memberId);
+
+        return ResponseEntity.ok()
+                .body(postGetResponses);
+
     }
 }
