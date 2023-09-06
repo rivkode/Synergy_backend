@@ -3,12 +3,14 @@ package com.team.synergy.follow;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.follow.dto.request.FollowType;
+import com.team.synergy.follow.dto.response.InfoFollowResponse;
 import com.team.synergy.member.Member;
 import com.team.synergy.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,21 +41,10 @@ public class FollowService {
     }
 
     @Transactional
-    public synchronized Follow followSave(Follow follow) {
-        Optional<Follow> followOptional = followRepository.findById(follow.getId());
+    public InfoFollowResponse findInfoFollowByMemberId(String memberId) {
+        List<String> followers = followRepository.findFollowerIdsByFollowingId(memberId);
+        List<String> followings = followRepository.findFollowingIdsByFollowerId(memberId);
 
-        if (followOptional.isPresent()) {
-            return null;
-        } else {
-            return this.followRepository.save(follow);
-        }
-    }
-
-    @Transactional
-    public void cancelFollow(Member follower, Member following) {
-        Follow followOptional = followRepository.findByFollowerIdAndFollowingId(follower.getId(), following.getId())
-                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "존재하지 않는 Follow 입니다"));
-
-        followOptional.cancelFollow();
+        return InfoFollowResponse.from(followers, followings);
     }
 }
