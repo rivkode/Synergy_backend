@@ -1,18 +1,16 @@
 package com.team.synergy.apply;
 
+import com.team.synergy.apply.dto.response.CreateApplyResponse;
+import com.team.synergy.apply.dto.response.MemberIdsResponse;
+import com.team.synergy.apply.dto.response.ProjectIdsResponse;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
-import com.team.synergy.member.dto.MemberDto;
-import com.team.synergy.member.MemberRepository;
 import com.team.synergy.project.Project;
-import com.team.synergy.project.dto.ProjectDto;
-import com.team.synergy.project.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,57 +19,52 @@ import java.util.Optional;
 public class ApplyService {
 
     private final ApplyRepository applyRepository;
-    private final MemberRepository memberRepository;
-    private final ProjectRepository projectRepository;
 
     @Transactional
-    public Long apply(String memberId, Long projectId) {
-        Optional<Member> memberValue = memberRepository.findById(memberId);
-        Member member = memberValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "멤버가 없습니다."));
-
-
-        Optional<Project> projectValue = projectRepository.findById(projectId);
-        Project project = projectValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "프로젝트가 없습니다."));
-
-
-        Apply apply = Apply.createApply(member, project);
-
-        applyRepository.save(apply);
-        return apply.getId();
-    }
-
-    @Transactional
-    public void cancelApply(Long applyId) {
-        Optional<Apply> applyValue = applyRepository.findById(applyId);
-        Apply apply = applyValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "해당 신청은 없습니다."));
-
-        apply.cancel();
-    }
-
-    public Apply findById(Long id) {
-        Optional<Apply> apply = applyRepository.findById(id);
-        if (apply.isPresent()) {
-            return apply.get();
+    public CreateApplyResponse createApply(Member member, Project project) {
+        Optional<Apply> applyOptional = applyRepository.findApplyByMemberAndProject(member, project);
+        if (applyOptional.isPresent()) {
+            throw new AppException(ErrorCode.INVALID_DATA, "이미 apply가 존재합니다");
         } else {
-            throw new AppException(ErrorCode.INVALID_DATA, "신청된 내역이 없습니다.");
+            Apply apply = new Apply(member, project);
+            Apply savedApply = applyRepository.save(apply);
+            return CreateApplyResponse.from(savedApply);
         }
     }
 
-    public ApplyDto getApplyDto(Long id) {
-        Apply apply = findById(id);
-        LocalDateTime current = LocalDateTime.now();
-        return ApplyDto.builder()
-                .applyTime(current)
-                .memberDto(MemberDto.from(apply.getMember()))
-                .projectDto(ProjectDto.from(apply.getProject()))
-                .build();
+    @Transactional
+    public void deleteApply(Member member, Project project) {
+        Apply apply = applyRepository.findApplyByMemberAndProject(member, project)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Apply가 존재하지 않습니다"));
+
+        applyRepository.delete(apply);
     }
 
-    public List<ApplyDto> getApplyByMemberId(Long memberId) {
-        Optional<Member> memberValue = memberRepository.findById(memberId);
-        Member member = memberValue.orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "멤버가 없습니다."));
+    @Transactional
+    public MemberIdsResponse findMemberIdsByProject(Member member) {
+        List<Long> projectIds = applyRepository.findProjectIdsByMemberId(member.getId());
 
-        List<Apply> applyList = applyRepository.findAppliesByMember(member);
-        return ApplyDto.of(applyList);
+        return MemberIdsResponse.createWithProjectIds(projectIds);
+    }
+
+    @Transactional
+    public ProjectIdsResponse findMemberIdsByProjectId(Project project) {
+        List<String> memberIds = applyRepository.findProjectIdsByMemberId(project.getId());
+
+        return ProjectIdsResponse.createWithMemberIds(memberIds);
+    }
+
+    @Transactional
+    public void accept(Project project, Member member) {
+        Apply apply = applyRepository.findApplyByMemberAndProject(member, project)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Apply가 존재하지 않습니다"));
+        apply.setStatus(ApplyStatus.DONE);
+        applyRepository.delete(apply);
+    }
+
+    public void reject(Project project, Member member) {
+        Apply apply = applyRepository.findApplyByMemberAndProject(member, project)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Apply가 존재하지 않습니다"));
+        apply.setStatus(ApplyStatus.REJECT);
     }
 }

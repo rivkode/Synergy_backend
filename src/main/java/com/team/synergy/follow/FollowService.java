@@ -2,9 +2,10 @@ package com.team.synergy.follow;
 
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
-import com.team.synergy.follow.dto.request.CreateFollowRequest;
-import com.team.synergy.follow.dto.response.CreateFollowResponse;
+import com.team.synergy.follow.dto.request.FollowType;
+import com.team.synergy.follow.dto.response.InfoFollowResponse;
 import com.team.synergy.member.Member;
+import com.team.synergy.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,36 +17,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FollowService {
     private final FollowRepository followRepository;
+    private final MemberService memberService;
 
     @Transactional
-    public CreateFollowResponse createFollow(Member follower, Member following, CreateFollowRequest request) {
-        List<String> followingIdList = followRepository.findFollowingIdsByFollowerId(request.getFollowerId());
-        if (followingIdList.contains(request.getFollowingId())) {
-            // 아무것도 수행하지 않음
-            return null;
-        }
+    public void updateFollow(String followerId, String followingId, FollowType type) {
+        FollowStatus status;
 
-        Follow savedFollow = followSave(follower, following);
-
-        return CreateFollowResponse.from(savedFollow);
-    }
-
-    @Transactional
-    public synchronized Follow followSave(Member follower, Member following) {
-        Optional<Follow> followOptional = followRepository.findByFollowerIdAndFollowingId(follower.getId(), following.getId());
-
-        if (followOptional.isPresent()) {
-            return null;
+        if (type.getFollowType().equals("follow")) {
+            status = FollowStatus.FOLLOW;
         } else {
-            Follow follow = Follow.createFollow(follower, following, FollowStatus.FOLLOW);
-            return this.followRepository.save(follow);
+            status = FollowStatus.UNFOLLOW;
+        }
+
+        Optional<Follow> followOptional = followRepository.findByFollowerIdAndFollowingId(followerId, followingId);
+        if (followOptional.isPresent()) {
+            followOptional.get().setStatus(status);
+        } else {
+            Member follower = memberService.findMemberById(followerId);
+            Member following = memberService.findMemberById(followingId);
+            Follow follow = new Follow(follower, following);
+            followRepository.save(follow);
         }
     }
 
     @Transactional
-    public void deleteFollow(Member follower, Member following) {
-        Follow follow = followRepository.findByFollowerIdAndFollowingId(follower.getId(), following.getId())
-                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "유효하지 않은 follow 입니다"));
-        follow.cancelFollow();
+    public InfoFollowResponse findInfoFollowByMemberId(String memberId) {
+        List<String> followers = followRepository.findFollowerIdsByFollowingId(memberId);
+        List<String> followings = followRepository.findFollowingIdsByFollowerId(memberId);
+
+        return InfoFollowResponse.from(followers, followings);
     }
 }

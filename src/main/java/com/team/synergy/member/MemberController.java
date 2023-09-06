@@ -1,9 +1,8 @@
 package com.team.synergy.member;
 
-import com.team.synergy.member.dto.MemberSignInRequest;
-import com.team.synergy.member.dto.MemberSignUpRequest;
-import com.team.synergy.member.dto.response.MemberGetResponse;
-import com.team.synergy.project.dto.response.ProjectGetResponse;
+import com.team.synergy.member.dto.request.MemberSignInRequest;
+import com.team.synergy.member.dto.request.MemberSignUpRequest;
+import com.team.synergy.member.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,24 +11,39 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.StandardCharsets;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/members")
+@RequestMapping("/members")
 public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> join(@RequestBody MemberSignUpRequest request) {
-        memberService.signup(request);
-        return ResponseEntity.ok().body("회원가입 성공");
+    public ResponseEntity<CreateMemberResponse> join(@RequestBody MemberSignUpRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(memberService.signup(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody MemberSignInRequest request, HttpServletResponse response) {
+    public ResponseEntity<LoginMemberResponse> login(@RequestBody MemberSignInRequest request) {
         return ResponseEntity.ok().body(memberService.login(request));
+    }
+
+    @GetMapping("/me/info")
+    public ResponseEntity<MeInfoResponse> getMemberFromToken(HttpServletRequest request) {
+        Member member = memberService.findMemberByToken(request);
+
+        return ResponseEntity.ok()
+                .body(MeInfoResponse.from(member));
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<InfoMemberResponse> getMember(@PathVariable("id") String memberId) {
+
+        return ResponseEntity.ok()
+                .body(memberService.memberInfo(memberId));
     }
 
     @GetMapping("/search")

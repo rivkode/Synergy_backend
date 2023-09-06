@@ -1,38 +1,43 @@
 package com.team.synergy.postlike;
 
-import com.team.synergy.exception.AppException;
-import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
-import com.team.synergy.member.MemberRepository;
+import com.team.synergy.member.MemberService;
 import com.team.synergy.post.Post;
-import com.team.synergy.post.PostRepository;
-import com.team.synergy.postlike.dto.request.CreatePostLikeRequest;
-import com.team.synergy.postlike.dto.response.CreatePostLikeResponse;
-import com.team.synergy.postlike.dto.response.DeletePostLikeResponse;
+import com.team.synergy.post.PostService;
+import com.team.synergy.postlike.dto.request.PostLikeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
-    private final MemberRepository memberRepository;
-    private final PostRepository postRepository;
+    private final MemberService memberService;
+    private final PostService postService;
 
     @Transactional
-    public CreatePostLikeResponse createPostLike(Member member, Post post, CreatePostLikeRequest request) {
-        PostLike postLike = request.toEntity(member, post);
-        PostLike savedPostLike = postLikeRepository.save(postLike);
+    public void updatePostLike(String memberId, Long postId, PostLikeType type) {
 
-        return CreatePostLikeResponse.from(savedPostLike);
-    }
+        PostLikeStatus status;
+        if (type.getLikeType().equals("like")) {
+            status = PostLikeStatus.LIKE;
+        } else {
+            status = PostLikeStatus.UNLIKE;
+        }
 
-    @Transactional
-    public DeletePostLikeResponse deletePostLike(Member member, Post post) {
-        PostLike postLike = postLikeRepository.findPostLikeByMemberAndPost(member, post)
-                .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "유효하지 않은 PostLike입니다"));
-        postLike.deletePostLike();
-        return DeletePostLikeResponse.from(postLike); // 수정 필요
+
+        // 이전에 member가 동일한 post에 대해 post_like를 가지고 있는지 check
+        Optional<PostLike> postLikeOptional = postLikeRepository.findPostLikeByMemberIdAndPostId(memberId, postId);
+        if (postLikeOptional.isPresent()) {
+            postLikeOptional.get().setStatus(status);
+        } else {
+            Member member = memberService.findMemberById(memberId);
+            Post post = postService.findPostById(postId);
+            PostLike postLike = new PostLike(member, post);
+            postLikeRepository.save(postLike);
+        }
     }
 }

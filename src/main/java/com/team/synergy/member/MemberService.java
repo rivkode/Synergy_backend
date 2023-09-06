@@ -2,17 +2,25 @@ package com.team.synergy.member;
 
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
+import com.team.synergy.member.dto.response.CreateMemberResponse;
+import com.team.synergy.member.dto.response.InfoMemberResponse;
+import com.team.synergy.member.dto.response.LoginMemberResponse;
 import com.team.synergy.member.dto.response.MemberGetResponse;
 import com.team.synergy.utils.JwtUtil;
-import com.team.synergy.member.dto.MemberSignInRequest;
-import com.team.synergy.member.dto.MemberSignUpRequest;
+import com.team.synergy.member.dto.request.MemberSignInRequest;
+import com.team.synergy.member.dto.request.MemberSignUpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -22,30 +30,33 @@ public class MemberService {
 
     private final BCryptPasswordEncoder encoder;
 
-    private Long expiredTimeMs = 1000 * 24 * 60 * 60L; // 1일
+    private Long expiredTimeMs = 1000 * 24 * 60 * 30 * 60L; // 30일
 
     @Value("${jwt.token.secret}")
     private String secretKey;
 
-    public String signup(MemberSignUpRequest request) {
+    @Transactional
+    public CreateMemberResponse signup(MemberSignUpRequest request) {
         memberRepository.findByEmail(request.getEmail())
                 .ifPresent(member -> {
                     throw new AppException((ErrorCode.MEMBERNAME_DUPLICATED), request.getEmail() + "는 이미 존재합니다");
                 });
-        memberRepository.save(new Member(request.getName(), encoder.encode(request.getPassword()), request.getEmail()));
+        Member savedMember = memberRepository.save(new Member(request.getName(), encoder.encode(request.getPassword()), request.getEmail()));
 
-        return "SUCCESS";
+        return CreateMemberResponse.from(savedMember);
     }
 
-    public String login(MemberSignInRequest request) {
-        Member savedMember = memberRepository.findByEmail(request.getEmail())
+    public LoginMemberResponse login(MemberSignInRequest request) {
+        Member findMember = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, request.getEmail() + "은 존재하지 않습니다"));
 
-        if (!encoder.matches(request.getPassword(), savedMember.getPassword())) {
+        if (!encoder.matches(request.getPassword(), findMember.getPassword())) {
             throw new AppException(ErrorCode.INVALID_PASSWORD, "패스워드를 잘못 입력하였습니다");
         }
 
-        return JwtUtil.createJwt(savedMember.getEmail(), secretKey, expiredTimeMs);
+        String token = JwtUtil.createJwt(findMember.getId(), secretKey, expiredTimeMs);
+
+        return LoginMemberResponse.from(token);
 
     }
 
@@ -60,5 +71,34 @@ public class MemberService {
 
         return memberGetResponses;
 
+    }
+
+    @Transactional
+    public InfoMemberResponse memberInfo(String memberId) {
+        Member member = findMemberById(memberId);
+        return InfoMemberResponse.from(member);
+    }
+
+    public Member findMemberByToken(HttpServletRequest request) {
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = authorization.split(" ")[1];
+        String memberId = JwtUtil.getId(token, secretKey);
+
+        return findMemberById(memberId);
+    }
+
+    public String findMemberIdByToken(HttpServletRequest request) {
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = authorization.split(" ")[1];
+        return JwtUtil.getId(token, secretKey);
+    }
+
+    public List<Member> findMembersByMemberIds(List<String> memberIds) {
+        List<Member> members = new ArrayList<>();
+
+        for (String id: memberIds) {
+            members.add(findMemberById(id));
+        }
+        return members;
     }
 }

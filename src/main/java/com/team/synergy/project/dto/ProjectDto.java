@@ -1,7 +1,6 @@
 package com.team.synergy.project.dto;
 
 import com.team.synergy.project.Project;
-import com.team.synergy.project.ProjectStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -40,8 +39,6 @@ public class ProjectDto {
                 .name(project.getName())
                 .content(project.getContent())
                 .field(project.getField())
-                .createDate(project.getCreateDate())
-                .endDate(project.getEndDate())
                 .build();
     }
 

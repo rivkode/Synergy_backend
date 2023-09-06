@@ -1,5 +1,6 @@
 package com.team.synergy.postlike;
 
+import com.team.synergy.BaseTime;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-public class PostLike {
+public class PostLike extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,6 +44,7 @@ public class PostLike {
     public PostLike(Member member, Post post) {
         this.member = member;
         this.post = post;
+        post.getLikes().add(this);
         this.status = PostLikeStatus.LIKE;
     }
 

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @DynamicUpdate //변경한 필드만 대응
 @Entity
-@Getter @Setter
+@Getter
 public class Apply extends BaseTime {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,52 +27,34 @@ public class Apply extends BaseTime {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Column(name = "apply_time")
-    private LocalDateTime applyTime; // 신청 시간
-
     @Column(name = "apply_status")
     @Enumerated(EnumType.STRING)
     private ApplyStatus status; // 신청 상태 [APPLY, CANCEL, PROCESS, DONE]
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
 
-    // 연관관계 메서드 //
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public void setStatus(ApplyStatus status) {
+        this.status = status;
+    }
 
     /**
      * 연관관계 주인을 떠나서 속성 객체에 양쪽의 값들을 넣어줘야 하기 떄문에 메서드 작성
      * 물론 비즈니스 로직에 양쪽 객체를 통해 세팅할 수 있지만 실수를 방지하기 위해
      */
-//    void setMember(Member member) {
-//        this.member = member;
-//        member.getApplyList().add(this);
-//    }
-//
-//    void setProject(Project project) {
-//        this.project = project;
-//        project.setApply(this);
-//    }
 
-    //==생성 메서드==//
-    public static Apply createApply(Member member, Project project) {
-        Apply apply = new Apply();
-        apply.setMember(member);
-        apply.setProject(project);
-        apply.setApplyTime(LocalDateTime.now());
-        apply.setStatus(ApplyStatus.APPLY);
-        return apply;
+    public Apply(Member member, Project project) {
+        this.member = member;
+        this.project = project;
+        this.status = ApplyStatus.PROCESS;
     }
-
-    //==비즈니스 로직==//
-    public void cancel() {
-        if (getStatus() == ApplyStatus.DONE) {
-            throw new IllegalStateException("이미 팀 구성이 완료되었습니다");
-        } else {
-            System.out.println("CANCEL");
-            this.setStatus(ApplyStatus.CANCEL); // Apply 상태를 CANCEL 로 변경
-        }
-    }
-
 }

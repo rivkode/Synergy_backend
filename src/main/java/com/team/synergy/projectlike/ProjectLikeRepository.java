@@ -9,4 +9,6 @@ import java.util.Optional;
 
 public interface ProjectLikeRepository extends JpaRepository<ProjectLike, Long> {
     Optional<ProjectLike> findByMemberAndProject(Member member, Project project);
+
+    Optional<ProjectLike> findByMemberIdAndProjectId(String memberId, Long projectId);
 }
