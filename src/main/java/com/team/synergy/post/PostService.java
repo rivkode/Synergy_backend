@@ -44,8 +44,14 @@ public class PostService {
 
     public Page<PostGetResponse> getPosts(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
-        System.out.println("post 개수" + posts.getTotalElements());
         Page<PostGetResponse> postGetResponses = PostGetResponse.toResponses(posts);
+        return postGetResponses;
+    }
+
+    public Page<PostGetResponse> getPostsByMember(Pageable pageable, String memberId) {
+        Page<Post> posts = postRepository.findByMemberId(pageable, memberId);
+        Page<PostGetResponse> postGetResponses = PostGetResponse.toResponses(posts);
+
         return postGetResponses;
     }
 
