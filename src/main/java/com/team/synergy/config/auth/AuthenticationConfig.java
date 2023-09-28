@@ -1,5 +1,6 @@
-package com.team.synergy.config;
+package com.team.synergy.config.auth;
 
+import com.team.synergy.config.JwtFilter;
 import com.team.synergy.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,14 +29,12 @@ public class AuthenticationConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/members/signup", "/members/login").permitAll() // jwt사용하는 경우 씀
-                .antMatchers(HttpMethod.POST, "/**").authenticated() // 윗줄의 api를 제외한 나머지는 모두 인증을 필요로 함
-                .antMatchers(HttpMethod.GET, "/**").authenticated()
-                .antMatchers(HttpMethod.PUT, "/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/**").authenticated()
+                .antMatchers("/members/signup", "/members/login", "/subscribe", "/hello").permitAll() // jwt사용하는 경우 씀
+                .antMatchers("/**").authenticated() // 윗줄의 api를 제외한 나머지는 모두 인증을 필요로 함
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // jwt사용하는 경우 씀
+                .and().logout().logoutSuccessUrl("/")
                 .and()
                 .addFilterBefore(new JwtFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .build();

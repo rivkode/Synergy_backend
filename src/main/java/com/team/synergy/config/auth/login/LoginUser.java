@@ -1,4 +1,4 @@
-package com.team.synergy.config.login;
+package com.team.synergy.config.auth.login;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
