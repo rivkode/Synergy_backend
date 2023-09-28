@@ -1,6 +1,6 @@
 package com.team.synergy.postlike;
 
 public enum PostLikeStatus {
-    LIKE,
-    UNLIKE
+    POST_LIKE,
+    POST_UNLIKE
 }

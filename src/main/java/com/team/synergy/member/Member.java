@@ -40,6 +40,10 @@ public class Member extends BaseTime {
 
     private String bio;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     @OneToMany(
             mappedBy = "member"
     )
@@ -71,6 +75,10 @@ public class Member extends BaseTime {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean hasSameId(String id) {
+        return this.id.equals(id);
     }
 
 

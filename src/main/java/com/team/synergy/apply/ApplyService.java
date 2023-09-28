@@ -6,6 +6,9 @@ import com.team.synergy.apply.dto.response.ProjectIdsResponse;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
+import com.team.synergy.member.MemberService;
+import com.team.synergy.notification.NotificationService;
+import com.team.synergy.notification.NotificationType;
 import com.team.synergy.project.Project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,8 @@ import java.util.Optional;
 public class ApplyService {
 
     private final ApplyRepository applyRepository;
+    private final NotificationService notificationService;
+    private final MemberService memberService;
 
     @Transactional
     public CreateApplyResponse createApply(Member member, Project project) {
@@ -28,6 +33,8 @@ public class ApplyService {
         } else {
             Apply apply = new Apply(member, project);
             Apply savedApply = applyRepository.save(apply);
+            Member leader = memberService.findMemberById(project.getLeaderId());
+            notificationService.send(leader, NotificationType.APPLY, String.valueOf(project.getId()));
             return CreateApplyResponse.from(savedApply);
         }
     }

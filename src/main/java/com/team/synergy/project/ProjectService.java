@@ -7,10 +7,8 @@ import com.team.synergy.member.Member;
 import com.team.synergy.member.MemberService;
 import com.team.synergy.project.dto.ProjectDto;
 import com.team.synergy.project.dto.request.CreateProjectRequest;
-import com.team.synergy.project.dto.response.CreateProjectResponse;
-import com.team.synergy.project.dto.response.InfoProjectResponse;
-import com.team.synergy.project.dto.response.ListInfoProjectResponse;
-import com.team.synergy.project.dto.response.ProjectGetResponse;
+import com.team.synergy.project.dto.response.*;
+import com.team.synergy.projectlike.ProjectLikeService;
 import com.team.synergy.projectmember.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +27,7 @@ public class ProjectService {
     private final ProjectMemberService projectMemberService;
     private final MemberService memberService;
     private final ApplyService applyService;
+    private final ProjectLikeService projectLikeService;
 
 
     @Transactional
@@ -106,5 +105,12 @@ public class ProjectService {
         }
 
         return new ListInfoProjectResponse(infoProjectResponses);
+    }
+
+    public ProjectIdsGetResponse getProjectLikeIdsByMember(String memberId) {
+        List<Long> projectIds = projectLikeService.getProjectIdsByMemberId(memberId);
+
+        return ProjectIdsGetResponse.from(projectIds);
+
     }
 }

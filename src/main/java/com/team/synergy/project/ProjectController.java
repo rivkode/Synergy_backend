@@ -3,10 +3,7 @@ package com.team.synergy.project;
 import com.team.synergy.member.Member;
 import com.team.synergy.member.MemberService;
 import com.team.synergy.project.dto.request.CreateProjectRequest;
-import com.team.synergy.project.dto.response.CreateProjectResponse;
-import com.team.synergy.project.dto.response.InfoProjectResponse;
-import com.team.synergy.project.dto.response.ListInfoProjectResponse;
-import com.team.synergy.project.dto.response.ProjectGetResponse;
+import com.team.synergy.project.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,5 +65,15 @@ public class ProjectController {
     public ResponseEntity<ListInfoProjectResponse> getProjectsByMember(@Param("memberId") String memberId) {
         return ResponseEntity.ok()
                 .body(projectService.getProjectsByMember(memberId));
+    }
+
+    @GetMapping("/me/likes")
+    public ResponseEntity<ProjectIdsGetResponse> getMyProjectIds(HttpServletRequest servletRequest) {
+        String memberId = memberService.findMemberIdByToken(servletRequest);
+        ProjectIdsGetResponse projectIdsGetResponse = projectService.getProjectLikeIdsByMember(memberId);
+
+        return ResponseEntity.ok()
+                .body(projectIdsGetResponse);
+
     }
 }

@@ -1,8 +1,6 @@
 package com.team.synergy.post.dto.response;
 
-import com.team.synergy.member.Member;
 import com.team.synergy.post.Post;
-import com.team.synergy.postlike.PostLike;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -12,6 +12,6 @@ public class CreatePostLikeResponse {
     private int allCount;
 
     public static CreatePostLikeResponse from(PostLike postLike) {
-        return new CreatePostLikeResponse(postLike.getMember().getId(), postLike.getPost().getId(), postLike.getPost().getPostLikeCount());
+        return new CreatePostLikeResponse(postLike.getMember().getId(), postLike.getPost().getId(), postLike.getPost().getLikes().size());
     }
 }

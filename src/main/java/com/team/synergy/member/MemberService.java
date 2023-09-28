@@ -2,6 +2,7 @@ package com.team.synergy.member;
 
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
+import com.team.synergy.follow.FollowService;
 import com.team.synergy.member.dto.response.CreateMemberResponse;
 import com.team.synergy.member.dto.response.InfoMemberResponse;
 import com.team.synergy.member.dto.response.LoginMemberResponse;

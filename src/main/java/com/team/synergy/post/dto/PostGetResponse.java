@@ -14,13 +14,16 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class PostGetResponse {
-    private Long id;
+    private Long postId;
     private String title;
     private String content;
     private String authorName;
     private String authorId;
     private String authorAvatar;
-    private Integer likes;
+    private int likes;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
+
 
     /**
      * udate, createAt 추가 필요
@@ -30,12 +33,14 @@ public class PostGetResponse {
 
     public static Page<PostGetResponse> toResponses(Page<Post> posts) {
         Page<PostGetResponse> postGetResponses = posts.map(post -> PostGetResponse.builder()
-                .id(post.getId())
+                .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .authorName(post.getMember().getName())
                 .authorId(post.getMember().getId())
                 .authorAvatar("")
+                .createAt(post.getCreateAt())
+                .updateAt(post.getUpdateAt())
                 .build());
         return postGetResponses;
     }

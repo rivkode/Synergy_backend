@@ -40,6 +40,6 @@ public class ProjectLike extends BaseTime {
         this.member = member;
         this.project = project;
         project.getLikes().add(this);
-        this.status = ProjectLikeStatus.LIKE;
+        this.status = ProjectLikeStatus.PROJECT_LIKE;
     }
 }

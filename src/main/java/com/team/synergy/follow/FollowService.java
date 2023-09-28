@@ -1,11 +1,11 @@
 package com.team.synergy.follow;
 
-import com.team.synergy.exception.AppException;
-import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.follow.dto.request.FollowType;
 import com.team.synergy.follow.dto.response.InfoFollowResponse;
 import com.team.synergy.member.Member;
 import com.team.synergy.member.MemberService;
+import com.team.synergy.notification.NotificationService;
+import com.team.synergy.notification.NotificationType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +18,7 @@ import java.util.Optional;
 public class FollowService {
     private final FollowRepository followRepository;
     private final MemberService memberService;
+    private final NotificationService notificationService;
 
     @Transactional
     public void updateFollow(String followerId, String followingId, FollowType type) {
@@ -37,6 +38,7 @@ public class FollowService {
             Member following = memberService.findMemberById(followingId);
             Follow follow = new Follow(follower, following);
             followRepository.save(follow);
+            notificationService.send(following, NotificationType.FOLLOW, followerId);
         }
     }
 
@@ -46,5 +48,9 @@ public class FollowService {
         List<String> followings = followRepository.findFollowingIdsByFollowerId(memberId);
 
         return InfoFollowResponse.from(followers, followings);
+    }
+
+    public List<String> findFollowingIdsByMemberId(String memberId) {
+        return followRepository.findFollowingIdsByFollowerId(memberId);
     }
 }

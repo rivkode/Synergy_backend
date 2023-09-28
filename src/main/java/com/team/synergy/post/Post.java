@@ -42,11 +42,15 @@ public class Post extends BaseTime {
     )
     private List<Comment> comments = new ArrayList<>();
 
-    @Basic(fetch = FetchType.LAZY)
-    @Formula("(select count(1) from post_like p where p.post_id = post_id)")
-    private int postLikeCount;
+//    @Basic(fetch = FetchType.LAZY)
+//    @Formula("(select count(1) from post_like p where p.post_id = post_id)")
+//    private int postLikeCount;
 
     public void deletePostLike(PostLike postLike) {
         likes.removeIf(postLike1 -> postLike1.getId().equals(postLike.getId()));
+    }
+
+    public void deleteComments() {
+
     }
 }

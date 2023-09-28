@@ -6,6 +6,8 @@ import com.team.synergy.post.dto.PostGetResponse;
 import com.team.synergy.post.dto.request.CreatePostRequest;
 import com.team.synergy.post.dto.response.CreatePostResponse;
 import com.team.synergy.post.dto.response.InfoPostResponse;
+import com.team.synergy.post.dto.response.ListPostResponse;
+import com.team.synergy.post.dto.response.PostIdsGetResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,13 +49,28 @@ public class PostController {
 
         return ResponseEntity.ok()
                 .body(postGetResponses);
+    }
 
+    @GetMapping("/recent/v2")
+    public ResponseEntity<ListPostResponse> getPostListWithNoOffset(HttpServletRequest servletRequest, @Param("end") String end) {
+        ListPostResponse listPostResponse = postService.getPostsWithNoOffset(Long.valueOf(end));
+
+        return ResponseEntity.ok()
+                .body(listPostResponse);
+    }
+
+    @GetMapping("/followings")
+    public ResponseEntity<Page<PostGetResponse>> getPostListByFollowings(HttpServletRequest servletRequest, @PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        String memberId = memberService.findMemberIdByToken(servletRequest);
+        Page<PostGetResponse> postGetResponses = postService.getPostsByFollowings(pageable, memberId);
+
+        return ResponseEntity.ok()
+                .body(postGetResponses);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable("id") Long postId) {
-        Post post = postService.findPostById(postId);
-        postService.deletePost(post);
+        postService.deletePost(postId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -67,11 +84,20 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostGetResponse>> getPostListByMember(@PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable, @Param("memberId") String memberId) {
-        Page<PostGetResponse> postGetResponses = postService.getPostsByMember(pageable,memberId);
+    public ResponseEntity<Page<PostGetResponse>> getPostListByMember(@PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable, @Param("authorId") String memberId) {
+        Page<PostGetResponse> postGetResponses = postService.getPostsByMember(pageable, memberId);
 
         return ResponseEntity.ok()
                 .body(postGetResponses);
 
+    }
+
+    @GetMapping("/me/likes")
+    public ResponseEntity<PostIdsGetResponse> getMyPostIds(HttpServletRequest servletRequest) {
+        String memberId = memberService.findMemberIdByToken(servletRequest);
+        PostIdsGetResponse postIdsGetResponse = postService.getPostLikeIdsByMemberId(memberId);
+
+        return ResponseEntity.ok()
+                .body(postIdsGetResponse);
     }
 }

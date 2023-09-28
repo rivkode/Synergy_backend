@@ -34,10 +34,10 @@ public class PostLike extends BaseTime {
 
 
     public void deletePostLike() {
-        if (getStatus() == PostLikeStatus.UNLIKE) {
+        if (getStatus() == PostLikeStatus.POST_UNLIKE) {
             throw new AppException(ErrorCode.INVALID_DATA, "이미 좋아요 취소 상태입니다");
         } else {
-            this.setStatus(PostLikeStatus.UNLIKE);
+            this.setStatus(PostLikeStatus.POST_UNLIKE);
         }
     }
 
@@ -45,7 +45,7 @@ public class PostLike extends BaseTime {
         this.member = member;
         this.post = post;
         post.getLikes().add(this);
-        this.status = PostLikeStatus.LIKE;
+        this.status = PostLikeStatus.POST_LIKE;
     }
 
     // 필드가 불완전한 객체 생성과 무분별한 객체 생성 체크를 하기 위해 protected 사용

@@ -5,6 +5,8 @@ import com.team.synergy.comment.dto.response.CreateCommentResponse;
 import com.team.synergy.exception.AppException;
 import com.team.synergy.exception.ErrorCode;
 import com.team.synergy.member.Member;
+import com.team.synergy.notification.NotificationService;
+import com.team.synergy.notification.NotificationType;
 import com.team.synergy.post.Post;
 import com.team.synergy.post.PostService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final PostService postService;
+    private final NotificationService notificationService;
 
     @Transactional
     public CreateCommentResponse createComment(String content, Member member, Post post) {
@@ -26,6 +28,15 @@ public class CommentService {
 
         comment.addPost(post);
         comment.addMember(member);
+
+        Member receiver = post.getMember();
+        System.out.println("send 하기 전");
+
+        // 댓글에 대한 알림 서비스
+        notificationService.send(receiver, NotificationType.COMMENT, String.valueOf(post.getId()));
+
+        System.out.println("send 한 후");
+
 
         return new CreateCommentResponse(savedComment.getId());
     }
