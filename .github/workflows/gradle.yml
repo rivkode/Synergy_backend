@@ -66,7 +66,7 @@ jobs:
   # 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행시키는 과정
   run-build-docker-image-on-ec2:
     # build-docker-image-on-local (위)과정이 완료되어야 실행됩니다.
-    needs: build-docker-image-on-ec2
+    needs: build-docker-image-on-local
     runs-on: ubuntu-latest
 
     steps:
