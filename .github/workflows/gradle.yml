@@ -70,22 +70,25 @@ jobs:
 
       # 1. 기존의 컨테이너를 중지시킵니다
       - name: docker stop container
-        run: |
-        docker stop ${{ secrets.DOCKERHUB_PROJECT_NAME }}
-        docker rm -f ${{ secrets.PROJECT_NAME }}
-        sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
+        run: docker stop ${{ secrets.DOCKERHUB_PROJECT_NAME }}
 
-      # 2. 최신 이미지를 풀받습니다
+      # 2. 기존의 컨테이너를 삭제합니다.
+      - name: docker remove container
+        run: docker rm -f ${{ secrets.PROJECT_NAME }}
+
+      # 3. Docker 이미지를 삭제합니다.
+      - name: docker rmi image
+        run: docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
+
+      # 4. 최신 이미지를 풀받습니다
       - name: docker pull
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
 
 
-      # 3. 최신 이미지를 컨테이너화하여 실행시킵니다
+      # 5. 최신 이미지를 컨테이너화하여 실행시킵니다
       - name: docker run new container
-        run: | 
-        docker run --name ${{ secrets.PROJECT_NAME}} --rm -p ${{ secrets.PORT }}:${{ secrets.PORT }} 
-        -d ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
+        run: docker run --name ${{ secrets.PROJECT_NAME}} --rm -p ${{ secrets.PORT }}:${{ secrets.PORT }} -d ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
 
-      # 4. 미사용 이미지를 정리합니다
+      # 6. 미사용 이미지를 정리합니다
       - name: delete old docker image
         run: sudo docker system prune -f
