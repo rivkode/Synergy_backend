@@ -145,13 +145,13 @@ jobs:
       #        run: docker ps -q | ForEach-Object { docker stop $_ 2>$null }
 
 
-            # 2. 기존의 컨테이너를 삭제합니다.
-            - name: docker remove container
-              run: docker rm -f ${{ secrets.PROJECT_NAME }}
-
-            # 3. Docker 이미지를 삭제합니다.
-            - name: docker rmi image
-              run: docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
+#            # 2. 기존의 컨테이너를 삭제합니다.
+#            - name: docker remove container
+#              run: docker rm -f ${{ secrets.PROJECT_NAME }}
+#
+#            # 3. Docker 이미지를 삭제합니다.
+#            - name: docker rmi image
+#              run: docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
 
 #      # 4. 최신 이미지를 풀받습니다
 #      - name: docker pull
