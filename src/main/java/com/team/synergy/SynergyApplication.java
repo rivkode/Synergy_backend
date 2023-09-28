@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SynergyApplication {
 
-    @GetMapping("/hello")
+    @GetMapping("/h")
     public String hello() {
-        return "now 2023 09 29";
+        return "now 2023 09 29:02:28";
     }
 
     public static void main(String[] args) {
