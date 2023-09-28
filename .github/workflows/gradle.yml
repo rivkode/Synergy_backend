@@ -26,7 +26,9 @@ jobs:
 
 
       - name: Set YML from Secrets
-        run: echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > src/main/resources/application.yml
+        run: |
+          $base64Text = "${{ secrets.APPLICATION_YML }}"
+          [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($base64Text)) | Set-Content -Path src/main/resources/application.yml
 
       # 0. Java 11 세팅
       - name: Set up JDK 11
