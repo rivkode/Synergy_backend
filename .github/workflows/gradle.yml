@@ -92,4 +92,4 @@ jobs:
 
       # 6. 미사용 이미지를 정리합니다
       - name: delete old docker image
-        run: sudo docker system prune -f
+        run: docker system prune -f
