@@ -21,6 +21,12 @@ jobs:
   build-docker-image-on-local:
     runs-on: self-hosted
     steps:
+      - name: set up Git repository
+        uses: actions/checkout@3
+
+      - name: Set YML from Secrets
+        run: echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > src/main/resources/application.yml
+
       - name: change project directory
         run: cd C:\Users\jongh\java\springproject\synergy
 
