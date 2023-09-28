@@ -70,7 +70,7 @@ jobs:
 
       # 1. 기존의 컨테이너를 중지시킵니다
       - name: docker stop container
-        run: docker stop ${{ secrets.DOCKERHUB_PROJECT_NAME }}
+        run: docker stop ${{ secrets.PROJECT_NAME }}
 
       # 2. 기존의 컨테이너를 삭제합니다.
       - name: docker remove container
