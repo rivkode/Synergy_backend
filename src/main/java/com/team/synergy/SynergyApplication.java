@@ -13,7 +13,7 @@ public class SynergyApplication {
 
     @GetMapping("/hello")
     public String hello() {
-        return "hello this is 20230928";
+        return "now 2023 09 29";
     }
 
     public static void main(String[] args) {
