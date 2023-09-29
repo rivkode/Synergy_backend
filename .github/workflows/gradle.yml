@@ -112,7 +112,7 @@ jobs:
 
       # 3. 최신 이미지를 컨테이너화하여 실행시킵니다
       - name: docker run new container
-        run: docker run --name ${{ secrets.PROJECT_NAME}} -p ${{ secrets.PORT }}:${{ secrets.PORT }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
+        run: docker run --name ${{ secrets.PROJECT_NAME}} -p ${{ secrets.PORT }}:${{ secrets.PORT }} -d ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
 
 #      # 4. 미사용 이미지를 정리합니다
 #      - name: delete old docker image
